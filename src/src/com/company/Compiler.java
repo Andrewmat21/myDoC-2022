@@ -17,7 +17,7 @@ public class Compiler {
 
     public static void main(String[] args) {
 	    //
-        ArrayList<Token> tokenList = new ArrayList<Token>();
+        ArrayList<Token> tokenList = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
 
         char currChar;
