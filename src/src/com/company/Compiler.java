@@ -149,66 +149,66 @@ public class Compiler {
                     if (!openQuote) {
                         if (!openComment) {
                             switch (finalState) {
-                                case 0:
+                                case 0: //error
                                     log("ERROR", currChar, lineNum, currPosition);
                                     errors++;
                                 case 2: //check for 'i'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 3:
+                                case 3: // check for 'if'
                                     tokenList.add(new Token("IF", lineNum, currPosition, "if"));
                                     log("IF", "if", lineNum, currPosition);
                                     break;
-                                case 5:
+                                case 5: // check for 'int'
                                     tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "INT"));
                                     log("VAR_TYPE", "int", lineNum, currPosition);
                                     nextState = 1;
                                     flag = false;
                                     break;
-                                case 6:
+                                case 6: // check for 'digit'
                                     tokenList.add(new Token("DIGIT", lineNum, currPosition, currChar));
                                     log("DIGIT", currChar, lineNum, currPosition);
                                     break;
-                                case 7:
+                                case 7: // check for 't'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 52:
+                                case 52: // check for '/*'
                                     openComment = true;
-                                case 53:
+                                case 53: // check for blank ' '
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                         log("ID", currChar, lineNum, currPosition);
                                         break;
-                                case 10:
+                                case 10: // check for 'true'
                                     tokenList.add(new Token("BOOL_VAL", lineNum, currPosition, "true"));
                                     log("BOOL_VAL", "true", lineNum, currPosition);
                                     break;
-                                case 11:
+                                case 11: // check for 'f'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 15:
+                                case 15: // check for 'false'
                                     tokenList.add(new Token("BOOL_VAL", lineNum, currPosition, "false"));
                                     log("BOOL_VAL", "false", lineNum, currPosition);
                                     break;
-                                case 16:
+                                case 16: // check for 'p'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 20:
+                                case 20: // check for 'print'
                                     tokenList.add(new Token("PRINT", lineNum, currPosition, "print"));
                                     log("PRINT", "print", lineNum, currPosition);
                                     break;
-                                case 22:
+                                case 22: // check for '!='
                                     tokenList.add(new Token("INEQUALITY_OP", lineNum, currPosition, "!="));
                                     log("INEQUALITY_OP", "!=", lineNum, currPosition);
                                     break;
-                                case 23:
+                                case 23: // check for 's'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 28:
+                                case 28: // check for 'string'
                                     tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "string"));
                                     log("VAR_TYPE", "string", lineNum, currPosition);
                                     break;
@@ -219,57 +219,57 @@ public class Compiler {
                                     nextState = 1;
                                     flag = false;
                                     break;
-                                case 31:
+                                case 31: // check for 'w'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 35:
+                                case 35: // check for 'while'
                                     tokenList.add(new Token("WHILE", lineNum, currPosition, "while"));
                                     log("WHILE", "while", lineNum, currPosition);
                                     break;
-                                case 36:
+                                case 36: // check for '('
                                     tokenList.add(new Token("L_PAREN", lineNum, currPosition, currChar));
                                     log("L_PAREN", currChar, lineNum, currPosition);
                                     break;
-                                case 37:
+                                case 37: // check for '+'
                                     tokenList.add(new Token("ADD_OP", lineNum, currPosition, currChar));
                                     log("ADD_OP", currChar, lineNum, currPosition);
                                     break;
-                                case 38:
+                                case 38: // check for 'b'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
-                                case 44:
+                                case 44: // check for 'boolean'
                                     tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "boolean"));
                                     log("VAR_TYPE", "boolean", lineNum, currPosition);
                                     break;
-                                case 45:
+                                case 45: // check for '$'
                                     tokenList.add(new Token("EOP", lineNum, currPosition, currChar));
                                     log("EOP", currChar, lineNum, currPosition);
                                     EOP = true;
                                     break;
-                                case 46:
+                                case 46: // check for ')'
                                     tokenList.add(new Token("R_PAREN", lineNum, currPosition, currChar));
                                     log("R_PAREN", currChar, lineNum, currPosition);
                                     break;
-                                case 47:
+                                case 47: // check for '{'
                                     tokenList.add(new Token("L_BRACE", lineNum, currPosition, currChar));
                                     log("L_BRACE", currChar, lineNum, currPosition);
                                     currState = 1;
                                     flag = false;
                                     break;
-                                case 48:
+                                case 48: // check for '}'
                                     tokenList.add(new Token("R_BRACE", lineNum, currPosition, currChar));
                                     log("R_BRACE", currChar, lineNum, currPosition);
                                     currState = 1;
                                     flag = false;
                                     break;
-                                case 56:
+                                case 56: // check for '"'
                                     tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
                                     log("QUOTE", currChar, lineNum, currPosition);
                                     openQuote = true;
                                     break;
-                                case 54:
+                                case 54: // check for '[a | c-e | g | h | j-o | q | r | u | v | x-z]'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
@@ -281,43 +281,43 @@ public class Compiler {
                     } else
                         //'CHAR' formatted token outputs for when open Quotes are detected
                         switch (currState) {
-                            case 2:
+                            case 2: // char 'i'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 7:
+                            case 7: // char 't'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 11:
+                            case 11: // char 'f'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 16:
+                            case 16: // char 'p'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 23:
+                            case 23: // char 's'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 31:
+                            case 31: // char 'w'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 38:
+                            case 38: // char 'b'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 54:
+                            case 54: // char '[a | c-e | g | h | j-o | q | r | u | v | x-z]'
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
                                 break;
-                            case 53:
+                            case 53: // char ' ' (space)
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, ' '));
                                 log("CHAR", ' ', lineNum, currPosition);
                                 break;
-                            case 56:
+                            case 56: // char '"'
                                 tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
                                 log("QUOTE", currChar, lineNum, currPosition);
                                 openQuote = false;
