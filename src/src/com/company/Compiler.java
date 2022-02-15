@@ -43,7 +43,8 @@ public class Compiler {
         boolean EOP = false;
         boolean flag = true;
 
-                 char[] abcd = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','{','}','(',')','!','=','+','"','/','*','$','\t'};
+        // character reference table
+        char[] abcd = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','{','}','(',')','!','=','+','"','/','*','$','\t'};
 
         int edges[][] =     { /* a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u  v  w  x  y  z  0  1  2  3  4  5  6  7  8  9  {  }  (  )  !  =  +  "  /  *  $  blank */
                 /* state 0 */  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -143,6 +144,7 @@ public class Compiler {
                     finalState = 0;
                     currChar = line.charAt(i);
                     while (true) {
+                        currPosition = i;
                         x = findIndex(abcd, currChar);
                         nextState = edges[currState][x];
                         if (nextState == 0)
@@ -276,6 +278,7 @@ public class Compiler {
                             openComment = false;
 
                     } else
+                        //'CHAR' formatted token outputs for when open Quotes are detected
                         switch (currState) {
                             case 2:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
@@ -311,13 +314,13 @@ public class Compiler {
                         }
                 }
             }
-
+            // End of program statement/error summary
             System.out.println("INFO  Lexer - Lex completed with " + errors + " error(s)");
 
         }
     }
 
-
+    // output function for char Tokens
     public static void log(String tokenType, char value, int line, int position){
 
         if (tokenType == "ERROR")
@@ -326,6 +329,7 @@ public class Compiler {
             System.out.println("DEGUG Lexer - " + tokenType + " [ " + value + " ] found at (" + line + ":" + position + ")");
     }
 
+    //output function for keyword tokens
     public static void log(String tokenType, String value, int line, int position){
 
         if (tokenType == "ERROR")
@@ -334,6 +338,7 @@ public class Compiler {
             System.out.println("DEGUG Lexer - " + tokenType + " [ " + value + " ] found at (" + line + ":" + position + ")");
     }
 
+    // potential function to output stream after ArrayList is finished
     public static void logTokens(ArrayList<Token> tokenList){
         //if (token == "ERROR")
         {
@@ -356,10 +361,6 @@ public class Compiler {
                 return true;
         }
         return false;
-    }
-
-    public static boolean isSymbol(int state){
-        return true;
     }
 
 }
