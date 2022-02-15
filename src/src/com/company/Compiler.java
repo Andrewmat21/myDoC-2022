@@ -13,11 +13,12 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class Compiler {
 
     public static void main(String[] args) {
 	    //
-        ArrayList<Token> tokenList = new ArrayList<>();
+        ArrayList<Token> tokenList = new ArrayList<Token>();
         Scanner scan = new Scanner(System.in);
 
         char currChar;
@@ -28,9 +29,9 @@ public class Compiler {
         int currPosition = 0;
         int lastPosition = -1;
         int programCounter = 0;
-        int currState = 1;
+        int currState;
         int nextState;
-        int finalState = 0;
+        int finalState;
         int x;
 
         // program counters

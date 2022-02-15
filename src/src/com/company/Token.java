@@ -7,7 +7,7 @@ public class Token {
     public int position;
     public int value;
     public String word;
-    public char symbol;
+    public char symbl;
 
 
     public Token(String tokenType, int lineNum, int position, int value) {
@@ -24,10 +24,10 @@ public class Token {
         this.word = word;
     }
 
-    public Token(String tokenType, int lineNum, int position, char symbol) {
+    public Token(String tokenType, int lineNum, int position, char symbl) {
         this.tokenType = tokenType;
         this.lineNum = lineNum;
         this.position = position;
-        this.word = word;
+        this.symbl = symbl;
     }
 }
