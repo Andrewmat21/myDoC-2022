@@ -1,5 +1,5 @@
 /*
-used https://lambda.uta.edu/cse5317/l2.pdf as a resource to help move towards accepting states using DFA.
+used https://lambda.uta.edu/cse5317/l2.pdf as a resource to help with finding longest match using DFA. line 126
 used on line 139 https://www.geeksforgeeks.org/find-the-index-of-an-array-element-in-java/ for findIndex method that can help find the index of 'nextChar' within the DFA.
 
 Andrew Mathew
@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class Compiler {
 
     public static void main(String[] args) {
-	// write your code here
+	    //
         ArrayList<Token> tokenList = new ArrayList<Token>();
         Scanner scan = new Scanner(System.in);
 
@@ -40,6 +40,7 @@ public class Compiler {
         // token boolean checkers
         boolean openComment = false;
         boolean openQuote = false;
+        //end of program '$' indicator
         boolean EOP = false;
         boolean flag = true;
 
@@ -105,42 +106,21 @@ public class Compiler {
                 /* state 55 */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 /* state 56 */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};//QUOTE: "
 
+        //run lexer until there is no more output available
         while(scan.hasNext()){
             EOP = false;
             programCounter++;
             System.out.println("INFO  Lexer - Lexing program " + programCounter + "...");
 
+            //turn input line into string
             String line = scan.nextLine();
             lineNum++;
             if (!EOP) {
                 for (int i = 0; i < line.length(); i++) {
-                    /*flag = true;
-                    currPosition = i;
-                    currChar = line.charAt(i);
-                    try {
-                        currState = edges[currState][findIndex(abcd, currChar)];
-                    }
-                    catch (IndexOutOfBoundsException e) {
-                        break;
-                    }
-                    if (currState == 0)
-                        log("ERROR", currChar, lineNum, currPosition);
-                    //currState = nextState;
-                    if(currState == 51)
-                        openComment = false;
-                    if(currState == 45) {
-                        //log EOP
-                        log("EOP", currChar, lineNum, currPosition);
-                        break;
-                    }
-                    try {
-                       nextChar = line.charAt(i + 1);
-                    }
-                    catch (IndexOutOfBoundsException e) {
-                        break;
-                    }
-                    */
+
+                    //set start state to 1
                     currState = 1;
+                    // set final state to 0 to catch errors
                     finalState = 0;
                     currChar = line.charAt(i);
                     while (true) {
@@ -174,10 +154,12 @@ public class Compiler {
                                     errors++;
                                 case 2: //check for 'i'
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
-                                    //log("ID", currChar, lineNum, currPosition);
+                                    log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 3:
                                     tokenList.add(new Token("IF", lineNum, currPosition, "if"));
                                     log("IF", "if", lineNum, currPosition);
+                                    break;
                                 case 5:
                                     tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "INT"));
                                     log("VAR_TYPE", "int", lineNum, currPosition);
@@ -187,38 +169,49 @@ public class Compiler {
                                 case 6:
                                     tokenList.add(new Token("DIGIT", lineNum, currPosition, currChar));
                                     log("DIGIT", currChar, lineNum, currPosition);
+                                    break;
                                 case 7:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 52:
                                     openComment = true;
                                 case 53:
-                                        /*tokenList.add(new Token("ID", lineNum, currPosition, currChar));
-                                        log("ID", currChar, lineNum, currPosition);*/
+                                        tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        log("ID", currChar, lineNum, currPosition);
+                                        break;
                                 case 10:
                                     tokenList.add(new Token("BOOL_VAL", lineNum, currPosition, "true"));
                                     log("BOOL_VAL", "true", lineNum, currPosition);
+                                    break;
                                 case 11:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 15:
                                     tokenList.add(new Token("BOOL_VAL", lineNum, currPosition, "false"));
                                     log("BOOL_VAL", "false", lineNum, currPosition);
+                                    break;
                                 case 16:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 20:
                                     tokenList.add(new Token("PRINT", lineNum, currPosition, "print"));
                                     log("PRINT", "print", lineNum, currPosition);
+                                    break;
                                 case 22:
                                     tokenList.add(new Token("INEQUALITY_OP", lineNum, currPosition, "!="));
                                     log("INEQUALITY_OP", "!=", lineNum, currPosition);
+                                    break;
                                 case 23:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 28:
                                     tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "string"));
                                     log("VAR_TYPE", "string", lineNum, currPosition);
+                                    break;
 
                                 case 30:   // creation of EQUALITY '==' Token
                                     tokenList.add(new Token("EQUALITY_OP", lineNum, currPosition, "=="));
@@ -229,21 +222,27 @@ public class Compiler {
                                 case 31:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 35:
                                     tokenList.add(new Token("WHILE", lineNum, currPosition, "while"));
                                     log("WHILE", "while", lineNum, currPosition);
+                                    break;
                                 case 36:
                                     tokenList.add(new Token("L_PAREN", lineNum, currPosition, currChar));
                                     log("L_PAREN", currChar, lineNum, currPosition);
+                                    break;
                                 case 37:
                                     tokenList.add(new Token("ADD_OP", lineNum, currPosition, currChar));
                                     log("ADD_OP", currChar, lineNum, currPosition);
+                                    break;
                                 case 38:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
+                                    break;
                                 case 44:
                                     tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "boolean"));
                                     log("VAR_TYPE", "boolean", lineNum, currPosition);
+                                    break;
                                 case 45:
                                     tokenList.add(new Token("EOP", lineNum, currPosition, currChar));
                                     log("EOP", currChar, lineNum, currPosition);
@@ -252,6 +251,7 @@ public class Compiler {
                                 case 46:
                                     tokenList.add(new Token("R_PAREN", lineNum, currPosition, currChar));
                                     log("R_PAREN", currChar, lineNum, currPosition);
+                                    break;
                                 case 47:
                                     tokenList.add(new Token("L_BRACE", lineNum, currPosition, currChar));
                                     log("L_BRACE", currChar, lineNum, currPosition);
@@ -268,13 +268,14 @@ public class Compiler {
                                     tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
                                     log("QUOTE", currChar, lineNum, currPosition);
                                     openQuote = true;
+                                    break;
                                 case 54:
                                     tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                     log("ID", currChar, lineNum, currPosition);
                                     break;
                             }
                         }
-                        else if(finalState == 53)
+                        else if(finalState == 51)
                             openComment = false;
 
                     } else
@@ -283,34 +284,44 @@ public class Compiler {
                             case 2:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 7:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 11:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 16:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 23:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 31:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 38:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 54:
                                 tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
                                 log("CHAR", currChar, lineNum, currPosition);
+                                break;
                             case 53:
-                                tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
-                                log("CHAR", currChar, lineNum, currPosition);
+                                tokenList.add(new Token("CHAR", lineNum, currPosition, ' '));
+                                log("CHAR", ' ', lineNum, currPosition);
+                                break;
                             case 56:
                                 tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
                                 log("QUOTE", currChar, lineNum, currPosition);
                                 openQuote = false;
+                                break;
                         }
                 }
             }
@@ -346,6 +357,7 @@ public class Compiler {
         }
     }
 
+    // used to find index of char in abcd array
     public static int findIndex(char arr[], char t){
         for(int i = 0; i < arr.length; i++){
             if(arr[i] == t)
@@ -354,6 +366,7 @@ public class Compiler {
         return -1;
     }
 
+    // function used to check if current state is a final state
     public static boolean isFinalState(int state){
         int[] finalStates = {0, 2, 3, 5, 6, 7, 10, 11, 15, 16, 20, 22, 23, 28, 30, 31, 35, 36, 37, 38, 44, 45, 46, 47, 48, 51, 52, 53, 54, 56};
         for (int i = 0; i < finalStates.length; i++){
