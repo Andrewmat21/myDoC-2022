@@ -24,10 +24,11 @@ public class Compiler {
         char currChar;
         char nextChar;
 
+        String line;
+
         // line/position trackers
         int lineNum = 0;
         int currPosition = 0;
-        int lastPosition = -1;
         int programCounter = 0;
         int currState = 1;
         int nextState;
@@ -36,7 +37,6 @@ public class Compiler {
         int tempState = 0;
         int x;
         int y;
-        int z;
         int i;
         int lastMatch = 0;
 
@@ -48,7 +48,7 @@ public class Compiler {
         boolean openComment = false;
         boolean openQuote = false;
         //end of program '$' indicator
-        boolean EOP = false;
+        boolean EOP = true;
         int EOPcount = 0;
         boolean flag = true;
 
@@ -116,15 +116,18 @@ public class Compiler {
 
         //run lexer until there is no more output available
         while(scan.hasNext()){
+            //EOP = true;
+            if (EOP) {
+                EOPcount = 0;
+                programCounter++;
+                errors = 0;
+                warnings = 0;
+                System.out.println();
+                System.out.println("INFO  Lexer - Lexing program " + programCounter + "...");
+            }
             EOP = false;
-            EOPcount = 0;
-            programCounter++;
-            errors = 0;
-            warnings = 0;
-            System.out.println("INFO  Lexer - Lexing program " + programCounter + "...");
-
             //turn input line into string
-            String line = scan.nextLine();
+            line = scan.nextLine();
             lineNum++;
             if (!EOP) {
                 i = 0;
@@ -138,19 +141,30 @@ public class Compiler {
                     while (true) {
                         currPosition = i;
                         // add try catch for index O_of_B error - invalid char
-                        try {
-                            x = findIndex(abcd, currChar);
-                        }
+
+                        x = findIndex(abcd, currChar);
                         // output error for invalid char
-                        catch (IndexOutOfBoundsException e){
-                            log("ERROR", currChar, lineNum, currPosition);
-                            errors++;
+                        if (x == -1)/*catch (IndexOutOfBoundsException e)*/{
+                            if (openComment){
+                                break;
+                            }
+                            else if (finalState == 52) {
+                                break;
+                            }
+                            else {
+                                log("ERROR", currChar, lineNum, currPosition);
+                                errors++;
+                                break;
+                            }
+                        }
+                        try {
+                            nextState = edges[currState][x];
+                            if (nextState == 0)
+                                break;
+                            currState = nextState;
+                        } catch (IndexOutOfBoundsException e) {
                             break;
                         }
-                        nextState = edges[currState][x];
-                        if (nextState == 0)
-                            break;
-                        currState = nextState;
                         //tempState = nextState;
                         if (isFinalState(currState)) {
                             finalState = currState;
@@ -164,15 +178,27 @@ public class Compiler {
                         }
 
                         // output error for invalid char
-                        try {
-                            y = findIndex(abcd, nextChar);
-                        } catch (IndexOutOfBoundsException e) {
-                            log("ERROR", currChar, lineNum, currPosition);
-                            errors++;
-                            break;
+
+                        y = findIndex(abcd, nextChar);
+                        if(y == -1)/*catch (IndexOutOfBoundsException e)*/ {
+                            if (openComment){
+                                break;
+                            }
+                            else if (finalState == 52)
+                                break;
+                            else {
+                                log("ERROR", currChar, lineNum, currPosition);
+                                errors++;
+                                break;
+                            }
                         }
                         // look ahead 1 char
-                        otherState = edges[currState][y];
+                        try {
+                            otherState = edges[currState][y];
+                        }
+                        catch (IndexOutOfBoundsException e) {
+                            break;
+                        }
                         // if transition state found ahead, keep going
                         if (otherState != 0) {
                             currChar = nextChar;
@@ -186,11 +212,22 @@ public class Compiler {
                             break;
                         }
                     }
-                    if (finalState == 0)
-                        log("ERROR", currChar, lineNum, currPosition);
+                    if (finalState == 0) {
+                        if (openComment) {
+                            currState = 1;
+                            finalState = 0;
+                        }
+                        else
+                            log("ERROR", currChar, lineNum, currPosition);
+                    }
 
                     else if ((currState != finalState)) {
-                        i = lastMatch;
+                        if (openComment) {
+                            currState = 1;
+                            finalState = 0;
+                        }
+                        else
+                            i = lastMatch;
                     }
 
                     else {
@@ -232,6 +269,8 @@ public class Compiler {
                                         break;
                                     case 52: // check for '/*'
                                         openComment = true;
+                                        currState = 1;
+                                        finalState = 0;
                                         break;
                                     case 53: // check for blank ' '
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
@@ -376,9 +415,15 @@ public class Compiler {
                                         break;
                                 }
                             }
-                            else if (finalState == 51)
+                            else if (finalState == 51) {
                                 openComment = false;
-
+                                currState = 1;
+                                finalState = 0;
+                            }
+                            else {
+                                currState = 1;
+                                finalState = 0;
+                            }
                         }
                         else if (finalState == 55) {
                             tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
@@ -467,23 +512,51 @@ public class Compiler {
                     if (flag)
                         i++;
                     }
+                if (EOP) {
+                    if (openQuote) {
+                        System.out.println("DEBUG - Lexer - WARNING: closed quote undetected at end-of-file.");
+                        warnings++;
+
+                    }
+                    if (openComment) {
+                        System.out.println("DEBUG - Lexer - WARNING: Unterminated comment detected at end-of-file.");
+                        warnings++;
+
+                    }
+                    if (EOPcount == 0) {
+                        warnings++;
+                        System.out.println("DEBUG - Lexer - WARNING: No EOP [$] detected at end-of-file.");
+
+                    }
+
+                    System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
+                    System.out.println();
+                }
             }
             // End of program statement/error summary
-            if (openComment) {
-                System.out.println("DEBUG - Lexer - WARNING: Unterminated comment detected at end-of-file.");
-                warnings++;
+            else if (EOP) {
+                if (openQuote) {
+                    System.out.println("DEBUG - Lexer - WARNING: closed quote undetected at end-of-file.");
+                    warnings++;
 
+                }
+                if (openComment) {
+                    System.out.println("DEBUG - Lexer - WARNING: Unterminated comment detected at end-of-file.");
+                    warnings++;
+
+                }
+                if (EOPcount == 0) {
+                    warnings++;
+                    System.out.println("DEBUG - Lexer - WARNING: No EOP [$] detected at end-of-file.");
+
+                }
+
+                System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
+                System.out.println();
             }
-            if (EOPcount == 0) {
-                warnings++;
-                System.out.println("DEBUG - Lexer - WARNING: No EOP [$] detected at end-of-file.");
-
-            }
-
-            System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
-            System.out.println();
 
         }
+
     }
 
     // output function for char Tokens
