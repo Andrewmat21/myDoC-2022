@@ -5,10 +5,9 @@ used on line 139 https://www.geeksforgeeks.org/find-the-index-of-an-array-elemen
 Andrew Mathew
 CMPT 432
 Dr. Labouseur
-Proj 1
 
 */
-//package com.company;
+package com.company;
 
 import java.util.ArrayList;
 import java.util.Scanner;
