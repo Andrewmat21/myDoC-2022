@@ -541,6 +541,14 @@ public class Compiler {
 
                     System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
                     System.out.println();
+
+                    if (errors == 0){
+
+                    }
+                    else{
+                        System.out.println("INFO  Parser - Skipped due to Lexer ERROR(s)");
+
+                    }
                 }
 
 

@@ -2,6 +2,7 @@
 REFERENCES:
 used https://stackoverflow.com/questions/14913804/recursive-descent-parser-in-java to help with figuring out parser logic
 */
+
 /*
 Project 2
 Andrew Mathew
@@ -11,7 +12,6 @@ Dr. Labouseur
 package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 
 public class Parser {
     int error = 0;
@@ -161,12 +161,13 @@ public class Parser {
 
     public void parseBoolExpr() {
         switch (getToken().tokenType){
-            case "QUOTE":
+            case "L_PAREN":
                 flag = true;
-                match("QUOTE");
+                match("L_PAREN");
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
+                match("R_PAREN");
                 break;
             case "BOOL_VAL":
                 flag = true;
@@ -222,10 +223,7 @@ public class Parser {
     }
 
     public void parseBoolVal() {
-        if (getToken().word == "false")
-            match("BOOL_VAL");
-        else
-            match("BOOL_VAL");
+        match("BOOL_VAL");
     }
 
     public void parseIntOp() {
