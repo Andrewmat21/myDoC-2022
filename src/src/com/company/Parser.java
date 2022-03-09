@@ -62,44 +62,63 @@ public class Parser {
         switch (getToken().tokenType) {
             case "PRINT":
                 flag = true;
+                parsePrintStatement();
                 break;
             case "ID":
                 flag = true;
+                parseAssignmentStatement();
                 break;
             case "VAR_TYPE":
                 flag = true;
+                parseVarDecl();
                 break;
             case "WHILE":
                 flag = true;
+                parseWhileStatement();
                 break;
             case "IF":
                 flag = true;
+                parseIfStatement();
+                break;
+            case "L_BRACE":
+                flag = true;
+                parseBlock();
                 break;
         }
     }
 
     public void parsePrintStatement() {
-
+        match("PRINT");
+        match("L_PAREN");
+        parseExpr();
+        match("R_PAREN");
     }
 
     public void parseAssignmentStatement() {
-
+        parseId();
+        match("ASSIGN_OP");
+        parseExpr();
     }
 
     public void parseVarDecl() {
-
+        parseType();
+        parseId();
     }
 
     public void parseWhileStatement() {
-
+        match("WHILE");
+        parseBoolExpr();
+        parseBlock();
     }
 
     public void parseIfStatement() {
-
+        match("IF");
+        parseBoolExpr();
+        parseBlock();
     }
 
     public void parseExpr() {
-
+        p
     }
 
     public void parseIntExpr() {
