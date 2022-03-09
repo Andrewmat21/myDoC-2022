@@ -58,8 +58,24 @@ public class Parser {
             n += 0;
     }
 
-    public void parseStatement(){
-
+    public void parseStatement() {
+        switch (getToken().tokenType) {
+            case "PRINT":
+                flag = true;
+                break;
+            case "ID":
+                flag = true;
+                break;
+            case "VAR_TYPE":
+                flag = true;
+                break;
+            case "WHILE":
+                flag = true;
+                break;
+            case "IF":
+                flag = true;
+                break;
+        }
     }
 
     public void parsePrintStatement() {

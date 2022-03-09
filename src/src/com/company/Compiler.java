@@ -531,6 +531,17 @@ public class Compiler {
                     System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
                     System.out.println();
                 }
+                else{
+                    if (EOPcount == 0) {
+                        warnings++;
+                        System.out.println("DEBUG - Lexer - WARNING: No EOP [$] detected at end-of-file. Adding one for you...You're Welcome.");
+                        tokenList.add(new Token("EOP", lineNum, currPosition+1, '$'));
+                    }
+                    System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
+                    System.out.println();
+                }
+
+
             }
             // End of program statement/error summary
             else if (EOP) {
