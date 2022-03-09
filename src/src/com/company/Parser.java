@@ -118,11 +118,28 @@ public class Parser {
     }
 
     public void parseExpr() {
-        p
+        switch (getToken().tokenType) {
+            case "DIGIT":
+                flag = true;
+                parseIntExpr();
+                break;
+            case "QUOTE":
+                flag = true;
+                parseStringExpr();
+                break;
+            case "L_PAREN":
+                flag = true;
+                parseBoolExpr();
+                break;
+            case "ID":
+                flag = true;
+                parseId();
+                break;
+        }
     }
 
     public void parseIntExpr() {
-
+        match(getToken().tokenType);
     }
 
     public void parseStringExpr() {
@@ -180,18 +197,6 @@ public class Parser {
             throwError(currTok.tokenType, expected, currTok.lineNum, currTok.position);
             return false;
     }
-/*
-    public boolean match(char expected) {
-        Token currTok = getToken();
-        if (currTok.symbl == expected) {
-            // addNode
-        }
-
-        else {
-            error++;
-            throwError();
-        }
-    }*/
 
     public Token getToken() {
        return stream.get(n);
