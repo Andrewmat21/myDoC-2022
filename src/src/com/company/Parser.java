@@ -145,19 +145,12 @@ public class Parser {
 
     public void parseIntExpr() {
         parseDigit();
-        try {
-            n++;
-            temp = getToken().tokenType;
-        }catch (IndexOutOfBoundsException e){       //FIX THIS
-
-        }
-        if (match("ADD_OP")) {
+        if (getToken().tokenType == "ADD_OP") {
             parseIntOp();
             parseExpr();
         }
         else
             n+=0;
-
     }
 
     public void parseStringExpr() {
@@ -188,7 +181,12 @@ public class Parser {
     }
 
     public void parseCharList() {
-        match("CHAR");
+        if (getToken().tokenType == "CHAR") {
+            parseChar();
+            parseCharList();
+        }
+        else
+            n+=0;
     }
 
     public void parseType() {
@@ -209,23 +207,29 @@ public class Parser {
     }
 
     public void parseChar() {
-
+        match("CHAR");
     }
 
     public void parseDigit() {
-
+        match("DIGIT");
     }
 
     public void parseBoolOp() {
-
+        if (getToken().tokenType == "EQUALITY_OP")
+            match("EQUALITY_OP");
+        else
+            match("INEQUALITY_OP");
     }
 
     public void parseBoolVal() {
-
+        if (getToken().word == "false")
+            match("BOOL_VAL");
+        else
+            match("BOOL_VAL");
     }
 
     public void parseIntOp() {
-
+        match("ADD_OP");
     }
 
     public boolean match(String expected) {
