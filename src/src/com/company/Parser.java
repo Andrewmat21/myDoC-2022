@@ -1,4 +1,8 @@
 /*
+REFERENCES:
+used https://stackoverflow.com/questions/14913804/recursive-descent-parser-in-java to help with figuring out parser logic
+*/
+/*
 Project 2
 Andrew Mathew
 CMPT 432
@@ -13,6 +17,7 @@ public class Parser {
     int error = 0;
     int n = 0;
     boolean flag;
+    String temp;
     ArrayList<Token> stream = new ArrayList<Token>();
 
     public Parser(ArrayList<Token> tokenStream) {
@@ -139,27 +144,75 @@ public class Parser {
     }
 
     public void parseIntExpr() {
-        match(getToken().tokenType);
+        parseDigit();
+        try {
+            n++;
+            temp = getToken().tokenType;
+        }catch (IndexOutOfBoundsException e){       //FIX THIS
+
+        }
+        if (match("ADD_OP")) {
+            parseIntOp();
+            parseExpr();
+        }
+        else
+            n+=0;
+
     }
 
     public void parseStringExpr() {
-
+        match("QUOTE");
+        parseCharList();
+        match("QUOTE");
     }
 
     public void parseBoolExpr() {
-
+        switch (getToken().tokenType){
+            case "QUOTE":
+                flag = true;
+                match("QUOTE");
+                parseExpr();
+                parseBoolOp();
+                parseExpr();
+                break;
+            case "BOOL_VAL":
+                flag = true;
+                match("BOOL_VAL");
+                parseBoolVal();
+                break;
+        }
     }
 
     public void parseId() {
-
+        match("ID");
     }
 
     public void parseCharList() {
-
+        match("CHAR");
     }
 
     public void parseType() {
-
+        switch (getToken().word) {
+            case "string":
+                flag = true;
+                match("QUOTE");
+                parseExpr();
+                parseBoolOp();
+                parseExpr();
+                break;
+            case "int":
+                flag = true;
+                match("BOOL_VAL");
+                parseBoolVal();
+                break;
+            case "boolean":
+                flag = true;
+                match("QUOTE");
+                parseExpr();
+                parseBoolOp();
+                parseExpr();
+                break;
+        }
     }
 
     public void parseChar() {
