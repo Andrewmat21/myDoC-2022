@@ -195,22 +195,15 @@ public class Parser {
         switch (getToken().word) {
             case "string":
                 flag = true;
-                match("QUOTE");
-                parseExpr();
-                parseBoolOp();
-                parseExpr();
+                match("VAR_TYPE");
                 break;
             case "int":
                 flag = true;
-                match("BOOL_VAL");
-                parseBoolVal();
+                match("VAR_TYPE");
                 break;
             case "boolean":
                 flag = true;
-                match("QUOTE");
-                parseExpr();
-                parseBoolOp();
-                parseExpr();
+                match("VAR_TYPE");
                 break;
         }
     }
