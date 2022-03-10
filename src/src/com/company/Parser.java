@@ -41,6 +41,7 @@ public class Parser {
         System.out.println("DEBUG Parser - Block...");
         match("L_BRACE");
         parseStatementList();
+        System.out.println("DEBUG Parser - Block...");
         match("R_BRACE");
     }
 
@@ -63,6 +64,11 @@ public class Parser {
             case "IF":
                 flag = true;
                 break;
+            case "L_BRACE":
+                flag = true;
+                break;
+            default:
+                flag = false;
         }
         if (flag){
             parseStatement();
@@ -77,27 +83,27 @@ public class Parser {
         System.out.println("DEBUG Parser - Statement...");
         switch (getToken().tokenType) {
             case "PRINT":
-                flag = true;
+                //flag = true;
                 parsePrintStatement();
                 break;
             case "ID":
-                flag = true;
+                //flag = true;
                 parseAssignmentStatement();
                 break;
             case "VAR_TYPE":
-                flag = true;
+                //flag = true;
                 parseVarDecl();
                 break;
             case "WHILE":
-                flag = true;
+                //flag = true;
                 parseWhileStatement();
                 break;
             case "IF":
-                flag = true;
+                //flag = true;
                 parseIfStatement();
                 break;
             case "L_BRACE":
-                flag = true;
+                //flag = true;
                 parseBlock();
                 break;
         }

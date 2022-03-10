@@ -274,7 +274,7 @@ public class Compiler {
                                         finalState = 0;
                                         break;
                                     case 53: // check for blank ' '
-                                        tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        //tokenList.add(new Token("ID", lineNum, currPosition, currChar));
                                         currState = 1;
                                         finalState = 0;
                                         break;
@@ -536,8 +536,8 @@ public class Compiler {
                     if (errors == 0){
                         System.out.println("INFO  Parser - Parsing program " + programCounter + "...");
                         //parseProgram
-                        //Parser parse = new Parser(tokenList);
-                        //parse.parseProgram();
+                        Parser parse = new Parser(tokenList);
+                        parse.parse();
                     }
                     else{
                         System.out.println("INFO  Parser - Skipped due to Lexer ERROR(s)");
