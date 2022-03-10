@@ -142,6 +142,7 @@ public class Parser {
     }
 
     public void parseExpr() {
+        System.out.println("DEBUG Parser - Expr...");
         switch (getToken().tokenType) {
             case "DIGIT":
                 flag = true;
@@ -163,6 +164,7 @@ public class Parser {
     }
 
     public void parseIntExpr() {
+        System.out.println("DEBUG Parser - Int Expr...");
         parseDigit();
         if (getToken().tokenType == "ADD_OP") {
             parseIntOp();
@@ -173,12 +175,14 @@ public class Parser {
     }
 
     public void parseStringExpr() {
+        System.out.println("DEBUG Parser - String Expr...");
         match("QUOTE");
         parseCharList();
         match("QUOTE");
     }
 
     public void parseBoolExpr() {
+        System.out.println("DEBUG Parser - Bool Expr...");
         switch (getToken().tokenType){
             case "L_PAREN":
                 flag = true;
