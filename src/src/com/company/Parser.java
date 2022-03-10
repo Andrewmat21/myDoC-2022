@@ -156,6 +156,10 @@ public class Parser {
                 flag = true;
                 parseBoolExpr();
                 break;
+            case "BOOL_VAL":
+                flag = true;
+                parseBoolExpr();
+                break;
             case "ID":
                 flag = true;
                 parseId();
