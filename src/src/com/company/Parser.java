@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 public class Parser {
     int error = 0;
+    int warnings = 0;
     int n = 0;
     boolean flag;
     String temp;
@@ -25,12 +26,19 @@ public class Parser {
         int errors = error;
     }
 
+    public void parse(){
+        parseProgram();
+        System.out.println("INFO Parser - Parse completed with 0 WARNING(s) and " + error + " ERROR(s)");
+    }
+
     public void parseProgram() {
+        System.out.println("DEBUG Parser - Parsing Program...");
         parseBlock();
         match("EOP");
     }
 
     public void parseBlock() {
+        System.out.println("DEBUG Parser - Block...");
         match("L_BRACE");
         parseStatementList();
         match("R_BRACE");
@@ -38,6 +46,7 @@ public class Parser {
 
     public void parseStatementList() {
         flag = false;
+        System.out.println("DEBUG Parser - Statement List...");
         switch(getToken().tokenType){
             case "PRINT":
                 flag = true;
@@ -59,11 +68,13 @@ public class Parser {
             parseStatement();
             parseStatementList();
         }
-        else
-            n += 0;
+        else {
+
+        }
     }
 
     public void parseStatement() {
+        System.out.println("DEBUG Parser - Statement...");
         switch (getToken().tokenType) {
             case "PRINT":
                 flag = true;
@@ -100,12 +111,14 @@ public class Parser {
     }
 
     public void parseAssignmentStatement() {
+        System.out.println("DEBUG Parser - Assignment Statement...");
         parseId();
         match("ASSIGN_OP");
         parseExpr();
     }
 
     public void parseVarDecl() {
+        System.out.println("DEBUG Parser - Var Decl...");
         parseType();
         parseId();
     }
@@ -237,13 +250,15 @@ public class Parser {
             if (n < stream.size() - 1) {
                 n++;
             }
+            parseLog(currTok.tokenType, expected, currTok.lineNum, currTok.position);
             return true;
         }
 
-        else
-            error++;
+        else {
             throwError(currTok.tokenType, expected, currTok.lineNum, currTok.position);
+            error++;
             return false;
+        }
     }
 
     public Token getToken() {
@@ -252,6 +267,9 @@ public class Parser {
 
     public static void throwError(String tokenType, String expected, int line, int position){
         System.out.println("ERROR Parser - Expected [ " + expected + " ] but found [ " + tokenType + " ] at (" + line + ":" + (position+1) + ")");
+    }
 
+    public static void parseLog(String tokenType, String expected, int line, int position){
+        System.out.println("VALID Parser - Expected [ " + expected + " ] and found [ " + tokenType + " ] at (" + line + ":" + (position+1) + ")");
     }
 }

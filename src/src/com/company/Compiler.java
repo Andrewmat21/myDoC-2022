@@ -20,6 +20,7 @@ public class Compiler {
         ArrayList<Token> tokenList = new ArrayList<Token>();
         Scanner scan = new Scanner(System.in);
 
+
         char currChar;
         char nextChar;
 
@@ -186,8 +187,8 @@ public class Compiler {
                             else if (finalState == 52)
                                 break;
                             else {
-                                log("ERROR", currChar, lineNum, currPosition);
-                                errors++;
+                                //log("ERROR", currChar, lineNum, currPosition);
+                                //errors++;
                                 break;
                             }
                         }
@@ -217,7 +218,8 @@ public class Compiler {
                             finalState = 0;
                         }
                         else
-                            log("ERROR", currChar, lineNum, currPosition);
+                            //log("ERROR", currChar, lineNum, currPosition);
+                            i+=0;
                     }
 
                     else if ((currState != finalState)) {
@@ -249,7 +251,7 @@ public class Compiler {
                                         finalState = 0;
                                         break;
                                     case 5: // check for 'int'
-                                        tokenList.add(new Token("VAR_TYPE", lineNum, currPosition-1, "INT"));
+                                        tokenList.add(new Token("VAR_TYPE", lineNum, currPosition-1, "int"));
                                         log("VAR_TYPE", "int", lineNum, currPosition-1);
                                         currState = 1;
                                         finalState = 0;
@@ -530,6 +532,17 @@ public class Compiler {
 
                     System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
                     System.out.println();
+
+                    if (errors == 0){
+                        System.out.println("INFO  Parser - Parsing program " + programCounter + "...");
+                        //parseProgram
+                        //Parser parse = new Parser(tokenList);
+                        //parse.parseProgram();
+                    }
+                    else{
+                        System.out.println("INFO  Parser - Skipped due to Lexer ERROR(s)");
+
+                    }
                 }
                 else{
 
@@ -543,7 +556,8 @@ public class Compiler {
                     System.out.println();
 
                     if (errors == 0){
-
+                        System.out.println("INFO  Parser - Parsing program " + programCounter + "...");
+                        //parseProgram
                     }
                     else{
                         System.out.println("INFO  Parser - Skipped due to Lexer ERROR(s)");
@@ -583,7 +597,7 @@ public class Compiler {
     public static void log(String tokenType, char value, int line, int position){
 
         if (tokenType == "ERROR")
-            System.out.println("ERROR Lexer - Unexpected [ " + value + " ] found at (" + line + ":" + (position+1) + ")");
+            System.out.println("ERROR Lexer - Unrecognized token [ " + value + " ] found at (" + line + ":" + (position+1) + ")");
         else
             System.out.println("DEGUG Lexer - " + tokenType + " [ " + value + " ] found at (" + line + ":" + (position+1) + ")");
     }
@@ -597,13 +611,13 @@ public class Compiler {
             System.out.println("DEGUG Lexer - " + tokenType + " [ " + value + " ] found at (" + line + ":" + position + ")");
     }
 
-    // potential function to output stream after ArrayList is finished
+    /* potential function to output stream after ArrayList is finished
     public static void logTokens(ArrayList<Token> tokenList){
         //if (token == "ERROR")
         {
             System.out.println();
         }
-    }
+    }*/
 
     // used to find index of char in abcd array
     public static int findIndex(char arr[], char t){
