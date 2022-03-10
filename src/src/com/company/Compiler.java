@@ -20,7 +20,6 @@ public class Compiler {
         ArrayList<Token> tokenList = new ArrayList<Token>();
         Scanner scan = new Scanner(System.in);
 
-
         char currChar;
         char nextChar;
 
@@ -39,6 +38,8 @@ public class Compiler {
         int y;
         int i;
         int lastMatch = 0;
+        int start = 0;
+        int startToken = 0;
 
         // program counters
         int warnings = 0;
@@ -240,30 +241,35 @@ public class Compiler {
                                         errors++;
                                     case 2: //check for 'i'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 3: // check for 'if'
                                         tokenList.add(new Token("IF", lineNum, currPosition, "if"));
+                                        start++;
                                         log("IF", "if", lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 5: // check for 'int'
                                         tokenList.add(new Token("VAR_TYPE", lineNum, currPosition-1, "int"));
+                                        start++;
                                         log("VAR_TYPE", "int", lineNum, currPosition-1);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 6: // check for 'digit'
                                         tokenList.add(new Token("DIGIT", lineNum, currPosition, currChar));
+                                        start++;
                                         log("DIGIT", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 7: // check for 't'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
@@ -280,54 +286,63 @@ public class Compiler {
                                         break;
                                     case 10: // check for 'true'
                                         tokenList.add(new Token("BOOL_VAL", lineNum, currPosition-2, "true"));
+                                        start++;
                                         log("BOOL_VAL", "true", lineNum, currPosition-2);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 11: // check for 'f'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 15: // check for 'false'
                                         tokenList.add(new Token("BOOL_VAL", lineNum, currPosition-3, "false"));
+                                        start++;
                                         log("BOOL_VAL", "false", lineNum, currPosition-3);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 16: // check for 'p'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 20: // check for 'print'
                                         tokenList.add(new Token("PRINT", lineNum, currPosition, "print"));
+                                        start++;
                                         log("PRINT", "print", lineNum, (currPosition-3));
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 22: // check for '!='
                                         tokenList.add(new Token("INEQUALITY_OP", lineNum, currPosition, "!="));
+                                        start++;
                                         log("INEQUALITY_OP", "!=", lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 23: // check for 's'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 28: // check for 'string'
                                         tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "string"));
+                                        start++;
                                         log("VAR_TYPE", "string", lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 29: // check for ASSIGN OP '='
                                         tokenList.add(new Token("ASSIGN_OP", lineNum, currPosition, "="));
+                                        start++;
                                         log("ASSIGN_OP", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
@@ -335,48 +350,56 @@ public class Compiler {
 
                                     case 30: // creation of EQUALITY '==' Token
                                         tokenList.add(new Token("EQUALITY_OP", lineNum, currPosition, "=="));
+                                        start++;
                                         log("EQUALITY_OP", "==", lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 31: // check for 'w'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 35: // check for 'while'
                                         tokenList.add(new Token("WHILE", lineNum, currPosition, "while"));
+                                        start++;
                                         log("WHILE", "while", lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 36: // check for '('
                                         tokenList.add(new Token("L_PAREN", lineNum, currPosition, currChar));
+                                        start++;
                                         log("L_PAREN", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 37: // check for '+'
                                         tokenList.add(new Token("ADD_OP", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ADD_OP", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 38: // check for 'b'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 44: // check for 'boolean'
                                         tokenList.add(new Token("VAR_TYPE", lineNum, currPosition, "boolean"));
+                                        start++;
                                         log("VAR_TYPE", "boolean", lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 45: // check for '$'
                                         tokenList.add(new Token("EOP", lineNum, currPosition, currChar));
+                                        start++;
                                         log("EOP", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
@@ -385,24 +408,28 @@ public class Compiler {
                                         break;
                                     case 46: // check for ')'
                                         tokenList.add(new Token("R_PAREN", lineNum, currPosition, currChar));
+                                        start++;
                                         log("R_PAREN", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 47: // check for '{'
                                         tokenList.add(new Token("L_BRACE", lineNum, currPosition, currChar));
+                                        start++;
                                         log("L_BRACE", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 48: // check for '}'
                                         tokenList.add(new Token("R_BRACE", lineNum, currPosition, currChar));
+                                        start++;
                                         log("R_BRACE", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
                                         break;
                                     case 55: // check for '"'
                                         tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
+                                        start++;
                                         log("QUOTE", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
@@ -410,6 +437,7 @@ public class Compiler {
                                         break;
                                     case 54: // check for '[a | c-e | g | h | j-o | q | r | u | v | x-z]'
                                         tokenList.add(new Token("ID", lineNum, currPosition, currChar));
+                                        start++;
                                         log("ID", currChar, lineNum, currPosition);
                                         currState = 1;
                                         finalState = 0;
@@ -428,6 +456,7 @@ public class Compiler {
                         }
                         else if (finalState == 55) {
                             tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
+                            start++;
                             log("QUOTE", currChar, lineNum, currPosition);
                             currState = 1;
                             finalState = 0;
@@ -438,60 +467,70 @@ public class Compiler {
                             switch (finalState) {
                                 case 2: // char 'i'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 7: // char 't'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 11: // char 'f'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 16: // char 'p'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 23: // char 's'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 31: // char 'w'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 38: // char 'b'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 54: // char '[a | c-e | g | h | j-o | q | r | u | v | x-z]'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, currChar));
+                                    start++;
                                     log("CHAR", currChar, lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 53: // char ' ' (space)
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, ' '));
+                                    start++;
                                     log("CHAR", ' ', lineNum, currPosition);
                                     currState = 1;
                                     finalState = 0;
                                     break;
                                 case 55: // char '"'
                                     tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
+                                    start++;
                                     log("QUOTE", currChar, lineNum, currPosition);
                                     openQuote = false;
                                     break;
@@ -536,22 +575,21 @@ public class Compiler {
                     if (errors == 0){
                         System.out.println("INFO  Parser - Parsing program " + programCounter + "...");
                         //parseProgram
-                        Parser parse = new Parser(tokenList);
+                        Parser parse = new Parser(tokenList, startToken);
                         parse.parse();
                     }
                     else{
                         System.out.println("INFO  Parser - Skipped due to Lexer ERROR(s)");
-
                     }
-                }
-                else{
+                    startToken = start;
+                } else /*if (!(scan.hasNext()))*/{
 
-                    if (EOPcount == 0) {
+                    /*if (EOPcount == 0) {
                         warnings++;
                         System.out.println("DEBUG - Lexer - WARNING: No EOP [$] detected at end-of-file. Adding one for you...You're Welcome.");
                         tokenList.add(new Token("EOP", lineNum, currPosition+1, '$'));
                     }
-
+                    /*
                     System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
                     System.out.println();
 
@@ -562,7 +600,7 @@ public class Compiler {
                     else{
                         System.out.println("INFO  Parser - Skipped due to Lexer ERROR(s)");
 
-                    }
+                    }*/
                 }
 
 
@@ -591,6 +629,13 @@ public class Compiler {
 
         }
 
+        if ((!(scan.hasNext()))) {
+            if (EOPcount == 0) {
+                warnings++;
+                System.out.println("DEBUG - Lexer - WARNING: No EOP [$] detected at end-of-file. Adding one for you...You're Welcome.");
+                tokenList.add(new Token("EOP", lineNum, currPosition + 1, '$'));
+            }
+        }
     }
 
     // output function for char Tokens

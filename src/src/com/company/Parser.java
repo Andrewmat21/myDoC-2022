@@ -15,15 +15,15 @@ import java.util.Scanner;
 
 public class Parser {
     int error = 0;
-    int warnings = 0;
-    int n = 0;
+    int n;
     boolean flag;
     String temp;
     ArrayList<Token> stream = new ArrayList<Token>();
 
-    public Parser(ArrayList<Token> tokenStream) {
+    public Parser(ArrayList<Token> tokenStream, int start) {
         stream = tokenStream;
         int errors = error;
+        n = start;
     }
 
     public void parse(){
