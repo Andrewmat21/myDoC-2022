@@ -17,8 +17,10 @@ public class Parser {
     int error = 0;
     int n;
     boolean flag;
+    int progNum = 0;
     String temp;
     ArrayList<Token> stream = new ArrayList<Token>();
+    CST tree = new CST();
 
     public Parser(ArrayList<Token> tokenStream, int start) {
         stream = tokenStream;
@@ -28,25 +30,35 @@ public class Parser {
 
     public void parse(){
         parseProgram();
-        System.out.println("INFO Parser - Parse completed with 0 WARNING(s) and " + error + " ERROR(s)");
+        System.out.println("INFO  Parser - Parse completed with " + error + " ERROR(s)");
+        if (this.getErrorNum() == 0){
+            progNum++;
+            System.out.println();
+            System.out.println("INFO  Creating CST for program " + progNum + "...");
+            tree.logCST(stream.size(), tree.root);
+        }
     }
 
     public void parseProgram() {
+        tree.addNode("Program", "root");
         System.out.println("DEBUG Parser - Parsing Program...");
         parseBlock();
         match("EOP");
     }
 
     public void parseBlock() {
+        tree.addNode("Block","branch");
         System.out.println("DEBUG Parser - Block...");
         match("L_BRACE");
         parseStatementList();
         System.out.println("DEBUG Parser - Block...");
         match("R_BRACE");
+        tree.moveUp();
     }
 
     public void parseStatementList() {
         flag = false;
+        tree.addNode("StatementList", "branch");
         System.out.println("DEBUG Parser - Statement List...");
         switch(getToken().tokenType){
             case "PRINT":
@@ -80,6 +92,7 @@ public class Parser {
     }
 
     public void parseStatement() {
+        tree.addNode("Statement", "branch");
         System.out.println("DEBUG Parser - Statement...");
         switch (getToken().tokenType) {
             case "PRINT":
@@ -110,6 +123,8 @@ public class Parser {
     }
 
     public void parsePrintStatement() {
+        tree.addNode("PrintStatement", "branch");
+        System.out.println("DEBUG Parser - Print Statement...");
         match("PRINT");
         match("L_PAREN");
         parseExpr();
@@ -117,6 +132,7 @@ public class Parser {
     }
 
     public void parseAssignmentStatement() {
+        tree.addNode("AssignmentStatement", "branch");
         System.out.println("DEBUG Parser - Assignment Statement...");
         parseId();
         match("ASSIGN_OP");
@@ -124,24 +140,30 @@ public class Parser {
     }
 
     public void parseVarDecl() {
+        tree.addNode("VarDecl", "branch");
         System.out.println("DEBUG Parser - Var Decl...");
         parseType();
         parseId();
     }
 
     public void parseWhileStatement() {
+        tree.addNode("WhileStatement", "branch");
+        System.out.println("DEBUG Parser - While Statement...");
         match("WHILE");
         parseBoolExpr();
         parseBlock();
     }
 
     public void parseIfStatement() {
+        tree.addNode("IfStatement", "branch");
+        System.out.println("DEBUG Parser - If Statement...");
         match("IF");
         parseBoolExpr();
         parseBlock();
     }
 
     public void parseExpr() {
+        tree.addNode("Expr", "branch");
         System.out.println("DEBUG Parser - Expr...");
         switch (getToken().tokenType) {
             case "DIGIT":
@@ -168,6 +190,7 @@ public class Parser {
     }
 
     public void parseIntExpr() {
+        tree.addNode("IntExpr", "branch");
         System.out.println("DEBUG Parser - Int Expr...");
         parseDigit();
         if (getToken().tokenType == "ADD_OP") {
@@ -179,6 +202,7 @@ public class Parser {
     }
 
     public void parseStringExpr() {
+        tree.addNode("StringExpr", "branch");
         System.out.println("DEBUG Parser - String Expr...");
         match("QUOTE");
         parseCharList();
@@ -186,6 +210,7 @@ public class Parser {
     }
 
     public void parseBoolExpr() {
+        tree.addNode("BooleanExpr", "branch");
         System.out.println("DEBUG Parser - Bool Expr...");
         switch (getToken().tokenType){
             case "L_PAREN":
@@ -205,10 +230,12 @@ public class Parser {
     }
 
     public void parseId() {
+        tree.addNode("Id", "branch");
         match("ID");
     }
 
     public void parseCharList() {
+        tree.addNode("CharList", "branch");
         if (getToken().tokenType == "CHAR") {
             parseChar();
             parseCharList();
@@ -218,6 +245,7 @@ public class Parser {
     }
 
     public void parseType() {
+        tree.addNode("Type", "branch");
         switch (getToken().word) {
             case "string":
                 flag = true;
@@ -235,14 +263,17 @@ public class Parser {
     }
 
     public void parseChar() {
+        tree.addNode("Char", "branch");
         match("CHAR");
     }
 
     public void parseDigit() {
+        tree.addNode("Digit", "branch");
         match("DIGIT");
     }
 
     public void parseBoolOp() {
+        tree.addNode("BoolOp", "branch");
         if (getToken().tokenType == "EQUALITY_OP")
             match("EQUALITY_OP");
         else
@@ -250,10 +281,12 @@ public class Parser {
     }
 
     public void parseBoolVal() {
+        tree.addNode("BoolVal", "branch");
         match("BOOL_VAL");
     }
 
     public void parseIntOp() {
+        tree.addNode("IntOp", "branch");
         match("ADD_OP");
     }
 
@@ -264,7 +297,8 @@ public class Parser {
             if (n < stream.size() - 1) {
                 n++;
             }
-            parseLog(currTok.tokenType, expected, currTok.lineNum, currTok.position);
+            parseLog(currTok.word, expected, currTok.lineNum, currTok.position);
+            tree.addNode("leaf", currTok.word);
             return true;
         }
 
@@ -279,11 +313,15 @@ public class Parser {
        return stream.get(n);
     }
 
+    public int getErrorNum(){
+        return error;
+    }
+
     public static void throwError(String tokenType, String expected, int line, int position){
         System.out.println("ERROR Parser - Expected [ " + expected + " ] but found [ " + tokenType + " ] at (" + line + ":" + (position+1) + ")");
     }
 
-    public static void parseLog(String tokenType, String expected, int line, int position){
-        System.out.println("VALID Parser - Expected [ " + expected + " ] and found [ " + tokenType + " ] at (" + line + ":" + (position+1) + ")");
+    public static void parseLog(String tokenName, String expected, int line, int position){
+        System.out.println("VALID Parser - Expected [ " + expected + " ] and found [ " + tokenName + " ] at (" + line + ":" + (position+1) + ")");
     }
 }
