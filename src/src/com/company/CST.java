@@ -17,7 +17,7 @@ import java.util.ArrayList;
     }
 
     public void endChildren() {
-        
+
     }
 }
 
@@ -57,7 +57,7 @@ import java.util.ArrayList;
                 System.out.println(lengthIn);
 
                 for (int j = 0; j < n.children.size(); j++){
-                    logCST(length + 1,n.children.get(j));
+                    logCST(length+1 ,n.children.get(j));
                 }
             }
 
@@ -67,6 +67,7 @@ import java.util.ArrayList;
             }
         }
 
+        //put an end to the children
         public void moveUp(){
             this.current = this.current.parent;
         }

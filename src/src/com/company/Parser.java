@@ -33,7 +33,7 @@ public class Parser {
         if (this.getErrorNum() == 0){
             System.out.println();
             System.out.println("INFO  Creating CST for program " + progNum + "...");
-            tree.logCST(stream.size(), tree.root);
+            tree.logCST(0, tree.root);
         }
         else {
             System.out.println();
@@ -41,6 +41,7 @@ public class Parser {
         }
     }
 
+    //program parse
     public void parseProgram() {
         tree.addNode("Program", "root");
         System.out.println("DEBUG Parser - Program...");
@@ -48,6 +49,7 @@ public class Parser {
         match("EOP");
     }
 
+    //block parse
     public void parseBlock() {
         tree.addNode("Block","branch");
         System.out.println("DEBUG Parser - Block...");
@@ -58,6 +60,7 @@ public class Parser {
         tree.moveUp();
     }
 
+    //stmt list parse
     public void parseStatementList() {
         flag = false;
         tree.addNode("StatementList", "branch");
@@ -88,42 +91,41 @@ public class Parser {
             parseStatement();
             parseStatementList();
         }
+        // epsilon production
         else {
-
+            match("empty");
         }
+        tree.moveUp();
     }
 
+    //stmt parse
     public void parseStatement() {
         tree.addNode("Statement", "branch");
         System.out.println("DEBUG Parser - Statement...");
         switch (getToken().tokenType) {
             case "PRINT":
-                //flag = true;
                 parsePrintStatement();
                 break;
             case "ID":
-                //flag = true;
                 parseAssignmentStatement();
                 break;
             case "VAR_TYPE":
-                //flag = true;
                 parseVarDecl();
                 break;
             case "WHILE":
-                //flag = true;
                 parseWhileStatement();
                 break;
             case "IF":
-                //flag = true;
                 parseIfStatement();
                 break;
             case "L_BRACE":
-                //flag = true;
                 parseBlock();
                 break;
         }
+        tree.moveUp();
     }
 
+    //print stmt parse
     public void parsePrintStatement() {
         tree.addNode("PrintStatement", "branch");
         System.out.println("DEBUG Parser - Print Statement...");
@@ -131,39 +133,49 @@ public class Parser {
         match("L_PAREN");
         parseExpr();
         match("R_PAREN");
+        tree.moveUp();
     }
 
+    //assign stmt parse
     public void parseAssignmentStatement() {
         tree.addNode("AssignmentStatement", "branch");
         System.out.println("DEBUG Parser - Assignment Statement...");
         parseId();
         match("ASSIGN_OP");
         parseExpr();
+        tree.moveUp();
     }
 
+    //var dec parse
     public void parseVarDecl() {
         tree.addNode("VarDecl", "branch");
         System.out.println("DEBUG Parser - Var Decl...");
         parseType();
         parseId();
+        tree.moveUp();
     }
 
+    //while stmt parse
     public void parseWhileStatement() {
         tree.addNode("WhileStatement", "branch");
         System.out.println("DEBUG Parser - While Statement...");
         match("WHILE");
         parseBoolExpr();
         parseBlock();
+        tree.moveUp();
     }
 
+    //if statement parse
     public void parseIfStatement() {
         tree.addNode("IfStatement", "branch");
         System.out.println("DEBUG Parser - If Statement...");
         match("IF");
         parseBoolExpr();
         parseBlock();
+        tree.moveUp();
     }
 
+    //expr parse
     public void parseExpr() {
         tree.addNode("Expr", "branch");
         System.out.println("DEBUG Parser - Expr...");
@@ -189,8 +201,10 @@ public class Parser {
                 parseId();
                 break;
         }
+        tree.moveUp();
     }
 
+    //int expr parse
     public void parseIntExpr() {
         tree.addNode("IntExpr", "branch");
         System.out.println("DEBUG Parser - Int Expr...");
@@ -201,16 +215,20 @@ public class Parser {
         }
         else
             n+=0;
+        tree.moveUp();
     }
 
+    //String expr parse
     public void parseStringExpr() {
         tree.addNode("StringExpr", "branch");
         System.out.println("DEBUG Parser - String Expr...");
         match("QUOTE");
         parseCharList();
         match("QUOTE");
+        tree.moveUp();
     }
 
+    //boolExpr parse
     public void parseBoolExpr() {
         tree.addNode("BooleanExpr", "branch");
         System.out.println("DEBUG Parser - Bool Expr...");
@@ -229,13 +247,17 @@ public class Parser {
                 parseBoolVal();
                 break;
         }
+        tree.moveUp();
     }
 
+    //Id parse
     public void parseId() {
         tree.addNode("Id", "branch");
         match("ID");
+        tree.moveUp();
     }
 
+    //charList parse
     public void parseCharList() {
 
         System.out.println("DEBUG Parser - Char List...");
@@ -248,8 +270,10 @@ public class Parser {
             match("empty");
             n += 0;
         }
+        tree.moveUp();
     }
 
+    //find type parse
     public void parseType() {
         tree.addNode("Type", "branch");
         switch (getToken().word) {
@@ -266,38 +290,50 @@ public class Parser {
                 match("VAR_TYPE");
                 break;
         }
+        tree.moveUp();
     }
 
+    //char parse
     public void parseChar() {
         tree.addNode("Char", "branch");
         match("CHAR");
+        tree.moveUp();
     }
 
+    // digit parse
     public void parseDigit() {
         tree.addNode("Digit", "branch");
         match("DIGIT");
+        tree.moveUp();
     }
 
+    //boolOp parse
     public void parseBoolOp() {
         tree.addNode("BoolOp", "branch");
         if (getToken().tokenType == "EQUALITY_OP")
             match("EQUALITY_OP");
         else
             match("INEQUALITY_OP");
+        tree.moveUp();
     }
 
+    //boolVal parse
     public void parseBoolVal() {
         tree.addNode("BoolVal", "branch");
         match("BOOL_VAL");
+        tree.moveUp();
     }
 
+    // intOp parse
     public void parseIntOp() {
         tree.addNode("IntOp", "branch");
         match("ADD_OP");
+        tree.moveUp();
     }
 
     public boolean match(String expected) {
         Token currTok = getToken();
+        // detect expected token
         if (currTok.tokenType == expected) {
             // addNode
             if (n < stream.size() - 1) {
@@ -307,11 +343,13 @@ public class Parser {
             tree.addNode("leaf", currTok.word);
             return true;
         }
+        //detect epsilon production
         else if (expected == "empty"){
             System.out.println("VALID Parser - e (Epsilon) production found at (" + (currTok.lineNum) + ":" + (currTok.position+1) + ")");
+
             return true;
         }
-
+    // display parse error
         else {
             throwError(currTok.tokenType, expected, currTok.lineNum, currTok.position);
             error++;
