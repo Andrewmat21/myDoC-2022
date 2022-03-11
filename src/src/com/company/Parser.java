@@ -41,7 +41,7 @@ public class Parser {
 
     public void parseProgram() {
         tree.addNode("Program", "root");
-        System.out.println("DEBUG Parser - Parsing Program...");
+        System.out.println("DEBUG Parser - Program...");
         parseBlock();
         match("EOP");
     }
@@ -235,13 +235,17 @@ public class Parser {
     }
 
     public void parseCharList() {
-        tree.addNode("CharList", "branch");
+
+        System.out.println("DEBUG Parser - Char List...");
         if (getToken().tokenType == "CHAR") {
+            tree.addNode("CharList", "branch");
             parseChar();
             parseCharList();
         }
-        else
-            n+=0;
+        else {
+            match("empty");
+            n += 0;
+        }
     }
 
     public void parseType() {
@@ -299,6 +303,10 @@ public class Parser {
             }
             parseLog(currTok.word, expected, currTok.lineNum, currTok.position);
             tree.addNode("leaf", currTok.word);
+            return true;
+        }
+        else if (expected == "empty"){
+            System.out.println("VALID Parser - e (Epsilon) production found at (" + (currTok.lineNum) + ":" + (currTok.position+1) + ")");
             return true;
         }
 

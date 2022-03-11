@@ -428,7 +428,7 @@ public class Compiler {
                                         finalState = 0;
                                         break;
                                     case 55: // check for '"'
-                                        tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
+                                        tokenList.add(new Token("QUOTE", lineNum, currPosition, "\""));
                                         start++;
                                         log("QUOTE", currChar, lineNum, currPosition);
                                         currState = 1;
@@ -455,7 +455,7 @@ public class Compiler {
                             }
                         }
                         else if (finalState == 55) {
-                            tokenList.add(new Token("QUOTE", lineNum, currPosition, currChar));
+                            tokenList.add(new Token("QUOTE", lineNum, currPosition, "\""));
                             start++;
                             log("QUOTE", currChar, lineNum, currPosition);
                             currState = 1;
