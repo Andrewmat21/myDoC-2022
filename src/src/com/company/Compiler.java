@@ -576,7 +576,7 @@ public class Compiler {
                         System.out.println("INFO  Parser - Parsing program " + programCounter + "...");
                         //parseProgram
                         Parser parse = new Parser(tokenList, startToken);
-                        parse.parse();
+                        parse.parse(programCounter);
                         if (parse.getErrorNum() == 0){
                             System.out.println();
                         }
