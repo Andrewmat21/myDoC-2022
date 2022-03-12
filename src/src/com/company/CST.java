@@ -26,10 +26,6 @@ import java.util.ArrayList;
         this.name = tokenName;
         this.parent = null;
     }
-
-    public void endChildren() {
-
-    }
 }
 
     public class CST{
