@@ -17,7 +17,6 @@ public class Parser {
     int error = 0;
     int n;
     boolean flag;
-    String temp;
     ArrayList<Token> stream = new ArrayList<Token>();
     CST tree = new CST();
 
@@ -30,11 +29,13 @@ public class Parser {
     public void parse(int progNum){
         parseProgram();
         System.out.println("INFO  Parser - Parse completed with " + error + " ERROR(s)");
+        // if parse completed with no errors, print CST
         if (this.getErrorNum() == 0){
             System.out.println();
             System.out.println("INFO  Creating CST for program " + progNum + "...");
             tree.logCST(0, tree.root);
         }
+        // skip CST when parse has Errors
         else {
             System.out.println();
             System.out.println("INFO  CST for program " + progNum + ": Skipped due to Parser ERROR(s)");

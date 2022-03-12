@@ -1,3 +1,14 @@
+/*
+References:
+For help with depth first tree traversal I used baedung.com/java-depth-first-search
+*/
+
+/*
+Andrew Mathew
+Dr. Labouseur
+CMPT 432
+Project 2
+*/
 package com.company;
 import java.util.ArrayList;
 
@@ -45,6 +56,7 @@ import java.util.ArrayList;
                 this.current = node;
         }
 
+        // prints CST
         public void logCST(int length, CSTNode n){
             String lengthIn = "";
 
@@ -52,6 +64,7 @@ import java.util.ArrayList;
                 lengthIn += "-";
             }
 
+            //if node has children, print Non Term name
             if (n.children.size() > 0){
                 lengthIn += "<" + n.type + ">";
                 System.out.println(lengthIn);
@@ -62,8 +75,11 @@ import java.util.ArrayList;
             }
 
             else {
-                lengthIn += "[ " + n.name + " ]";
-                System.out.println(lengthIn);
+                // handles bug where node with no children isnt printed as a terminal
+                if (n.name != "branch") {
+                    lengthIn += "[ " + n.name + " ]";
+                    System.out.println(lengthIn);
+                }
             }
         }
 
