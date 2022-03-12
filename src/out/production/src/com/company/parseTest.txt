@@ -1,0 +1,34 @@
+/* will fail*/
+{{{{{}}}$
+
+/*will pass*/
+{print("jiff")}$
+
+/*fail*/
+{boolean j
+j = (lk)}$
+
+/*pass*/
+{int g
+g = 5
+g + 1 + 3 + 5
+while(g == 5) {}}$
+
+{}$
+
+
+{print("bingo was his name o")}$
+
+{int == boolean}$
+
+{string f
+ int s
+ print("game of thrones")
+ int g
+ s + 4
+}$
+
+{1 == 2}$
+
+{this should definitely fail}$
+
