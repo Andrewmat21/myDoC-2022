@@ -9,7 +9,7 @@ Dr. Labouseur
 CMPT 432
 Project 2
 */
-//package com.company;
+package com.company;
 import java.util.ArrayList;
 
     class CSTNode {

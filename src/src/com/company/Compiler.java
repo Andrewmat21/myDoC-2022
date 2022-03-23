@@ -7,7 +7,7 @@ CMPT 432
 Dr. Labouseur
 
 */
-//package com.company;
+package com.company;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -16,13 +16,12 @@ import java.util.Scanner;
 public class Compiler {
 
     public static void main(String[] args) {
-	    //
+
         ArrayList<Token> tokenList = new ArrayList<Token>();
         Scanner scan = new Scanner(System.in);
 
         char currChar;
         char nextChar;
-
         String line;
 
         // line/position trackers
@@ -48,10 +47,10 @@ public class Compiler {
         // token boolean checkers
         boolean openComment = false;
         boolean openQuote = false;
+
         //end of program '$' indicator
         boolean EOP = true;
         int EOPcount = 0;
-        boolean flag = true;
 
         // character reference table
         char[] abcd = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','{','}','(',')','!','=','+','"','/','*','$',' '};
@@ -115,8 +114,8 @@ public class Compiler {
                 /* state 55 */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //QUOTE: "
                 /* state 56 */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-        //run lexer until there is no more output available
-        while(scan.hasNext()){
+        // run lexer until there is no more output available
+        while(scan.hasNext()) {
             //EOP = true;
             if (EOP) {
                 EOPcount = 0;
@@ -127,25 +126,30 @@ public class Compiler {
                 System.out.println("INFO  Lexer - Lexing program " + programCounter + "...");
             }
             EOP = false;
-            //turn input line into string
+            // turn input line into string
             line = scan.nextLine();
             lineNum++;
             if (!EOP) {
+
+                // check for unterminated string on previous line.
+                if (openQuote){
+                    System.out.println("ERROR Lexer - Unterminated string found at the end of line " + (lineNum-1));
+                    errors++;
+                }
+
                 i = 0;
-                while (i < line.length()) /*for (int i = 0; i < line.length(); i++)*/ {
-                    flag = true;
-                    //set start state to 1
-                    //currState = 1;
+                while (i < line.length()) {
+                    // set start state to 1
                     // set final state to 0 to catch errors
-                    //finalState = 0;
+
+
                     currChar = line.charAt(i);
                     while (true) {
                         currPosition = i;
-                        // add try catch for index O_of_B error - invalid char
 
                         x = findIndex(abcd, currChar);
                         // output error for invalid char
-                        if (x == -1)/*catch (IndexOutOfBoundsException e)*/{
+                        if (x == -1) {
                             if (openComment){
                                 break;
                             }
@@ -166,7 +170,7 @@ public class Compiler {
                         } catch (IndexOutOfBoundsException e) {
                             break;
                         }
-                        //tempState = nextState;
+                        // tempState = nextState;
                         if (isFinalState(currState)) {
                             finalState = currState;
                             lastMatch = i;
@@ -181,7 +185,8 @@ public class Compiler {
                         // output error for invalid char
 
                         y = findIndex(abcd, nextChar);
-                        if(y == -1)/*catch (IndexOutOfBoundsException e)*/ {
+                        // check if char is not a valid character in our language
+                        if(y == -1) {
                             if (openComment){
                                 break;
                             }
@@ -193,34 +198,49 @@ public class Compiler {
                                 break;
                             }
                         }
+
                         // look ahead 1 char
-                        try {
-                            otherState = edges[currState][y];
-                        }
-                        catch (IndexOutOfBoundsException e) {
-                            break;
+                        // skip look ahead if within quote
+                        if(!openQuote) {
+                            try {
+                                otherState = edges[currState][y];
+                            } catch (IndexOutOfBoundsException e) {
+                                break;
+                            }
                         }
                         // if transition state found ahead, keep going
                         if (otherState != 0) {
                             currChar = nextChar;
                             i++;
                         }
+
+                        else if (currState == 21){
+                            log("ERROR", currChar, lineNum, currPosition);
+                            errors++;
+                            currState = 1;
+                            finalState = 0;
+                            break;
+                        }
                         // fall back to last final state
-                        else{
+                        else {
                             i = lastMatch;
                             currState = finalState;
                             currChar = line.charAt(i);
                             break;
                         }
                     }
+
                     if (finalState == 0) {
                         if (openComment) {
                             currState = 1;
                             finalState = 0;
                         }
-                        else
+                        else {
                             //log("ERROR", currChar, lineNum, currPosition);
-                            i+=0;
+                            //currState = 1;
+                            //finalState = 0;
+                            //i += 0;
+                        }
                     }
 
                     else if ((currState != finalState)) {
@@ -239,6 +259,9 @@ public class Compiler {
                                     case 0: //error
                                         log("ERROR", currChar, lineNum, currPosition);
                                         errors++;
+                                        currState = 1;
+                                        finalState = 0;
+                                        break;
                                     case 2: //check for 'i'
                                         tokenList.add(new Token("ID", lineNum, currPosition, Character.toString(currChar)));
                                         start++;
@@ -442,6 +465,12 @@ public class Compiler {
                                         currState = 1;
                                         finalState = 0;
                                         break;
+                                    default: // invalid char within string
+                                        System.out.println("ERROR Lexer - Invalid [ " + currChar + " ] string literal found at (" + lineNum + ":" + (currPosition+1) + ") - Only characters [a-z] are allowed.");
+                                        warnings++;
+                                        currState = 1;
+                                        finalState = 0;
+                                        break;
                                 }
                             }
                             else if (finalState == 51) {
@@ -463,7 +492,7 @@ public class Compiler {
                             openQuote = false;
                         }
                         else
-                            //'CHAR' formatted token outputs for when open Quotes are detected
+                            // 'CHAR' formatted token outputs for when open Quotes are detected
                             switch (finalState) {
                                 case 2: // char 'i'
                                     tokenList.add(new Token("CHAR", lineNum, currPosition, Character.toString(currChar)));
@@ -541,16 +570,15 @@ public class Compiler {
                                     warnings++;
                                     break;
                                 default: // invalid char within string
-                                    System.out.println("DEBUG Lexer - WARNING: Invalid [ " + currChar + " ] string literal found at (" + lineNum + ":" + (currPosition+1) + ") - Only characters [a-z] are allowed.");
-                                    warnings++;
+                                    System.out.println("DEBUG Lexer - ERROR: Invalid [ " + currChar + " ] string literal found at (" + lineNum + ":" + (currPosition+1) + ") - Only characters [a-z] are allowed.");
+                                    errors++;
                                     currState = 1;
                                     finalState = 0;
                                     break;
-
                             }
                         }
-                    if (flag)
-                        i++;
+                    // move index forward
+                    i++;
                     }
                 if (EOP) {
                     if (openQuote) {
@@ -572,9 +600,10 @@ public class Compiler {
                     System.out.println("INFO  Lexer - Lex completed with " + warnings + " WARNING(s) and " + errors + " ERROR(s)");
                     System.out.println();
 
+                    // if lex has 0 errors, continue to parse...
+                    // otherwise, skip it
                     if (errors == 0){
                         System.out.println("INFO  Parser - Parsing program " + programCounter + "...");
-                        //parseProgram
                         Parser parse = new Parser(tokenList, startToken);
                         parse.parse(programCounter);
                         if (parse.getErrorNum() == 0){
@@ -605,8 +634,6 @@ public class Compiler {
 
                     }*/
                 }
-
-
             }
             // End of program statement/error summary
             else if (EOP) {
@@ -650,7 +677,7 @@ public class Compiler {
             System.out.println("DEGUG Lexer - " + tokenType + " [ " + value + " ] found at (" + line + ":" + (position+1) + ")");
     }
 
-    //output function for keyword tokens
+    // output function for keyword tokens
     public static void log(String tokenType, String value, int line, int position){
 
         if (tokenType == "ERROR")
@@ -658,14 +685,6 @@ public class Compiler {
         else
             System.out.println("DEGUG Lexer - " + tokenType + " [ " + value + " ] found at (" + line + ":" + position + ")");
     }
-
-    /* potential function to output stream after ArrayList is finished
-    public static void logTokens(ArrayList<Token> tokenList){
-        //if (token == "ERROR")
-        {
-            System.out.println();
-        }
-    }*/
 
     // used to find index of char in abcd array
     public static int findIndex(char arr[], char t){
