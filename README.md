@@ -17,6 +17,3 @@ Use parseTest.txt for project 2
  use command javac Compiler.java 
  
  use java Compiler < inputfile.txt
- 
-
- 
