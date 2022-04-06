@@ -61,7 +61,7 @@ public class Parser {
         tree.moveUp();
     }
 
-    //stmt list parse
+    //statement list parse
     public void parseStatementList() {
         flag = false;
         tree.addNode("branch", "StatementList");
@@ -99,7 +99,7 @@ public class Parser {
         tree.moveUp();
     }
 
-    //stmt parse
+    //statement parse
     public void parseStatement() {
         tree.addNode("branch", "Statement");
         System.out.println("DEBUG Parser - Statement...");
@@ -126,7 +126,7 @@ public class Parser {
         tree.moveUp();
     }
 
-    //print stmt parse
+    //print statement parse
     public void parsePrintStatement() {
         tree.addNode("branch", "PrintStatement");
         System.out.println("DEBUG Parser - Print Statement...");
@@ -137,7 +137,7 @@ public class Parser {
         tree.moveUp();
     }
 
-    //assign stmt parse
+    //assign statement parse
     public void parseAssignmentStatement() {
         tree.addNode("branch", "AssignmentStatement");
         System.out.println("DEBUG Parser - Assignment Statement...");
@@ -156,7 +156,7 @@ public class Parser {
         tree.moveUp();
     }
 
-    //while stmt parse
+    //while statement parse
     public void parseWhileStatement() {
         tree.addNode("branch", "WhileStatement");
         System.out.println("DEBUG Parser - While Statement...");
@@ -219,7 +219,7 @@ public class Parser {
         tree.moveUp();
     }
 
-    //String expr parse
+    //string expr parse
     public void parseStringExpr() {
         tree.addNode("branch", "StringExpr");
         System.out.println("DEBUG Parser - String Expr...");
@@ -346,7 +346,6 @@ public class Parser {
         //detect epsilon production
         else if (expected == "empty"){
             System.out.println("VALID Parser - e (Epsilon) production found at (" + (currTok.lineNum) + ":" + (currTok.position+1) + ")");
-
             return true;
         }
         // display parse error

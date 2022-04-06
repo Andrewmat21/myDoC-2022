@@ -213,7 +213,7 @@ public class Compiler {
                             currChar = nextChar;
                             i++;
                         }
-
+                        // catch error for unexpected '!'
                         else if (currState == 21){
                             log("ERROR", currChar, lineNum, currPosition);
                             errors++;
@@ -236,10 +236,7 @@ public class Compiler {
                             finalState = 0;
                         }
                         else {
-                            //log("ERROR", currChar, lineNum, currPosition);
-                            //currState = 1;
-                            //finalState = 0;
-                            //i += 0;
+
                         }
                     }
 
