@@ -95,6 +95,7 @@ import java.util.ArrayList;
                 this.current = node;
         }
 
+        // function for printing AST
         public void logAST(int length, CSTNode n){
             String lengthIn = "";
 
@@ -106,10 +107,6 @@ import java.util.ArrayList;
             if (n.children.size() > 0){
                 lengthIn += "<" + n.name + ">";
                 System.out.println(lengthIn);
-
-                for (int j = 0; j < n.children.size(); j++){
-                    logCST(length+1 ,n.children.get(j));
-                }
             }
 
             else {
@@ -117,6 +114,12 @@ import java.util.ArrayList;
                 if (n.type != "branch") {
                     lengthIn += "[ " + n.name + " ]";
                     System.out.println(lengthIn);
+                }
+            }
+
+            if (n.children.size() > 0){
+                for(int j = 0; j < n.children.size(); j++){
+                    logAST(length+1, n.children.get(j));
                 }
             }
         }
