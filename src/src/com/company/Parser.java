@@ -39,6 +39,9 @@ public class Parser {
             System.out.println();
             System.out.println("INFO  Creating AST for program " + progNum + "...");
             ast.logAST(0, ast.root);
+            // fix semantic statement
+            System.out.println();
+            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + progNum + "...");
         }
         // skip CST when parse has Errors
         else {

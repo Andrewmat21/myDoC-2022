@@ -1,5 +1,6 @@
 package com.company;
 
+
 import java.util.ArrayList;
 
 public class SemanticA {
@@ -8,19 +9,37 @@ public class SemanticA {
     int error = 0;
     int warning = 0;
 
-    ArrayList<Symbol> symbolTable = new ArrayList();
+    ArrayList<Scope> symbolTable = new ArrayList();
 
-    public SemanticA(ArrayList<CSTNode> tree){
+    public SemanticA(){
 
     }
 
+    public void analyze(ArrayList<CSTNode> tree){
+        //tree.get();
+
+    }
+
+    public void logSymbolTable(){
+        System.out.println("Program " + num + " Symbol Table");
+        System.out.println("----------------------------------------------");
+        System.out.println("Name Type   Scope   Line");
+        System.out.println("----------------------------------------------");
+        for (i = 0; i < symbolTable.size(); i++){
+            System.out.println();
+        }
+    }
 }
 
-class Symbol{
+class Scope{
     String value;
     String type;
     int currentScope;
     int totalScope;
     int index;
+
+    public Scope(){
+
+    }
 }
 
