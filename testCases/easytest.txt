@@ -1,5 +1,1 @@
-{a!2}$
-
-{}$
-
-{int i}$
+{ int b b = 4 string s s = "hey"}$
