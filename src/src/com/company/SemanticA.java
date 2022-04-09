@@ -8,6 +8,19 @@ public class SemanticA {
     int error = 0;
     int warning = 0;
 
-    //ArrayList<> symbolTable = new ArrayList();
+    ArrayList<Symbol> symbolTable = new ArrayList();
+
+    public SemanticA(ArrayList<CSTNode> tree){
+
+    }
 
 }
+
+class Symbol{
+    String value;
+    String type;
+    int currentScope;
+    int totalScope;
+    int index;
+}
+
