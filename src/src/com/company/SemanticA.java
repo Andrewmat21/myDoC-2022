@@ -5,13 +5,13 @@ import java.util.ArrayList;
 
 public class SemanticA {
     CST ast = new CST();
-    int currentScope = 0;
+    int currentScope = -1;
     int error = 0;
     int warning = 0;
 
     boolean isInitialized;
 
-    ArrayList<Scope> symbolTable = new ArrayList();
+    ArrayList<ScopeList> symbolTable = new ArrayList();
 
     public SemanticA(){
 
@@ -21,9 +21,11 @@ public class SemanticA {
 
         switch (n.name){
             case "Block":
-                symbolTable.add()
+                currentScope++;
+                symbolTable.add(new ScopeList(currentScope));
                 break;
-            case "":
+            case "PrintStatement":
+                
                 break;
         }
 
@@ -56,6 +58,15 @@ class Scope{
     int index;
 
     public Scope(int scope, String type, String name, int index, int line){
+
+    }
+}
+
+class ScopeList {
+
+    Scope[] list = new Scope[26];
+
+    public ScopeList(int scope){
 
     }
 }
