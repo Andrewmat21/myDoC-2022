@@ -266,7 +266,7 @@ public class Parser {
                 else {
                     ast.addNode("branch", "Inequality");
                 }
-                
+
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
