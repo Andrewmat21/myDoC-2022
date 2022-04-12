@@ -115,6 +115,11 @@ import java.util.ArrayList;
                     lengthIn += "[ " + n.name + " ]";
                     System.out.println(lengthIn);
                 }
+
+                else{
+                    lengthIn += "[ " + n.name + " ]";
+                    System.out.println(lengthIn);
+                }
             }
 
             if (n.children.size() > 0){

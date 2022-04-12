@@ -258,6 +258,7 @@ public class Parser {
             case "L_PAREN":
                 flag = true;
                 match("L_PAREN");
+                //ast.addNode("branch", getToken().word);
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
@@ -340,11 +341,15 @@ public class Parser {
     //boolOp parse
     public void parseBoolOp() {
         tree.addNode("branch", "BoolOp");
-        ast.addNode("branch", "BoolOp");
-        if (getToken().tokenType == "EQUALITY_OP")
+        //ast.addNode("branch", "BoolOp");
+        if (getToken().tokenType == "EQUALITY_OP") {
+            ast.addNode("branch", "Equality");
             match("EQUALITY_OP");
-        else
+        }
+        else {
+            ast.addNode("branch", "Equality");
             match("INEQUALITY_OP");
+        }
         tree.moveUp();
         ast.moveUp();
     }

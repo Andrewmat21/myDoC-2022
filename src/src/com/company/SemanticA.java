@@ -25,8 +25,17 @@ public class SemanticA {
                 symbolTable.add(new ScopeList(currentScope));
                 break;
             case "PrintStatement":
-                
+                analyze(n.children.get(2), progNum);
                 break;
+            case "VarDecl":
+                analyze(n.children.get(2), progNum);
+                break;
+            case "WhileStatement":
+                analyze(n.children.get(2), progNum);
+            case "IfStatement":
+            //case "":
+           // case "":
+
         }
 
 
@@ -57,9 +66,14 @@ class Scope{
     int totalScope;
     int index;
 
+    public Scope(){
+
+    }
+
     public Scope(int scope, String type, String name, int index, int line){
 
     }
+
 }
 
 class ScopeList {
