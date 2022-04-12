@@ -258,7 +258,15 @@ public class Parser {
             case "L_PAREN":
                 flag = true;
                 match("L_PAREN");
-                //ast.addNode("branch", getToken().word);
+
+                // add BoolOp non-term node to AST
+                if (getNextToken().tokenType == "EQUALITY_OP") {
+                    ast.addNode("branch", "Equality");
+                }
+                else {
+                    ast.addNode("branch", "Inequality");
+                }
+                
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
@@ -341,17 +349,15 @@ public class Parser {
     //boolOp parse
     public void parseBoolOp() {
         tree.addNode("branch", "BoolOp");
-        //ast.addNode("branch", "BoolOp");
         if (getToken().tokenType == "EQUALITY_OP") {
-            ast.addNode("branch", "Equality");
+            //ast.addNode("branch", "Equality");
             match("EQUALITY_OP");
         }
         else {
-            ast.addNode("branch", "Equality");
+            //ast.addNode("branch", "Equality");
             match("INEQUALITY_OP");
         }
         tree.moveUp();
-        ast.moveUp();
     }
 
     //boolVal parse
@@ -397,6 +403,10 @@ public class Parser {
 
     public Token getToken() {
        return stream.get(n);
+    }
+
+    public Token getNextToken() {
+        return stream.get(n+1);
     }
 
     public int getErrorNum(){

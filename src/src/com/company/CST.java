@@ -117,7 +117,7 @@ import java.util.ArrayList;
                 }
 
                 else{
-                    lengthIn += "[ " + n.name + " ]";
+                    lengthIn += "< " + n.name + " >";
                     System.out.println(lengthIn);
                 }
             }
