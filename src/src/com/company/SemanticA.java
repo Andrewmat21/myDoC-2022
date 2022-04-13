@@ -29,13 +29,16 @@ public class SemanticA {
                 break;
             case "VarDecl":
                 analyze(n.children.get(1), progNum);
+                symbolTable.get(currentScope).add(new Scope(/*currentScope, n.name,*/));
                 break;
             case "WhileStatement":
                 analyze(n.children.get(2), progNum);
             case "IfStatement":
             case "Id":
-                symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
-           // case "":
+                for (int i = 0; i < currentScope; i++){
+                //symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
+                // case "":
+            }
         }
 
         if (n.children.size() > 0){
@@ -67,13 +70,15 @@ class Scope{
     String type;
     int currentScope;
     int totalScope;
-    int index;
+    int line;
+    boolean isInit;
+    boolean isUsed;
 
     public Scope(){
 
     }
 
-    public Scope(int scope, String type, String name, int index, int line){
+    public Scope(int scope, String type, String name, int line, boolean init, boolean used){
 
     }
 
@@ -81,10 +86,15 @@ class Scope{
 
 class ScopeList {
 
-    Scope[] list = new Scope[26];
+    ArrayList<Scope> list = new ArrayList<>();
+    int scopeNum;
 
     public ScopeList(int scope){
+        this.scopeNum = scope;
+    }
 
+    public void add(){
+        
     }
 }
 
