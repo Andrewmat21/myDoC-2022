@@ -230,13 +230,18 @@ public class Parser {
     public void parseIntExpr() {
         tree.addNode("branch", "IntExpr");
         System.out.println("DEBUG Parser - Int Expr...");
+
+        if (getNextToken().tokenType == "ADD_OP") {
+            ast.addNode("branch", "Addition");
+        }
+
         parseDigit();
         if (getToken().tokenType == "ADD_OP") {
             parseIntOp();
             parseExpr();
         }
         else
-            n+=0;
+            //n+=0;
         tree.moveUp();
     }
 
@@ -285,9 +290,10 @@ public class Parser {
     public void parseId() {
         tree.addNode("branch", "Id");
         System.out.println("DEBUG Parser - Id...");
-        ast.addNode("leaf", getToken().word);
+        ast.addNode("leaf", getToken().word, getToken().lineNum);
         match("ID");
         tree.moveUp();
+
     }
 
     //charList parse
@@ -340,10 +346,9 @@ public class Parser {
     // digit parse
     public void parseDigit() {
         tree.addNode("branch", "Digit");
-        ast.addNode("leaf", getToken().word);
+        ast.addNode("leaf", getToken().word, getToken().lineNum);
         match("DIGIT");
         tree.moveUp();
-        ast.moveUp();
     }
 
     //boolOp parse
@@ -370,10 +375,10 @@ public class Parser {
     // intOp parse
     public void parseIntOp() {
         tree.addNode("branch", "IntOp");
-        ast.addNode("branch", "IntOp");
+        //ast.addNode("branch", "IntOp");
         match("ADD_OP");
         tree.moveUp();
-        ast.moveUp();
+        //ast.moveUp();
     }
 
     public boolean match(String expected) {

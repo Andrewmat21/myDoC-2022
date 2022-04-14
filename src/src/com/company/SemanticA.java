@@ -8,10 +8,11 @@ public class SemanticA {
     int currentScope = -1;
     int error = 0;
     int warning = 0;
+    int existance;
 
     boolean isInitialized;
 
-    ArrayList<ScopeList> symbolTable = new ArrayList();
+    ArrayList<ArrayList<Scope>> symbolTable = new ArrayList<ArrayList<Scope>>();
 
     public SemanticA(){
 
@@ -22,18 +23,39 @@ public class SemanticA {
         switch (n.name){
             case "Block":
                 currentScope++;
-                symbolTable.add(new ScopeList(currentScope));
+                symbolTable.add(new ArrayList<Scope>());
                 break;
             case "PrintStatement":
                 analyze(n.children.get(2), progNum);
+                existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                if (existance != -1)
+                    if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
+                        break;
+                    else{
+                        //print warning: var being used but never initialized
+                        break;
+                    }
                 break;
             case "VarDecl":
-                analyze(n.children.get(1), progNum);
-                symbolTable.get(currentScope).add(new Scope(/*currentScope, n.name,*/));
+                //analyze(n.children.get(1), progNum);
+                // check if it exists
+                // if not, add to scope list under currentScope
+                if (!(existsInScope(symbolTable, n.children.get(1).name, currentScope)))
+                    symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
                 break;
             case "WhileStatement":
                 analyze(n.children.get(2), progNum);
+                existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                if (existance != -1)
+                    if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
+                        break;
+                    else{
+                        //print warning: var being used but never initialized
+                        break;
+                    }
+                break;
             case "IfStatement":
+            case "AssignmentStatement":
             case "Id":
                 for (int i = 0; i < currentScope; i++){
                 //symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
@@ -63,6 +85,37 @@ public class SemanticA {
             System.out.println();
         }
     }
+
+    public static int exists(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
+        for (int i = scopeNum; i >= 0; i--){
+            for (int j = 0; j < table.get(i).size(); j++){
+                if (table.get(i).get(j).value == id){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static boolean existsInScope(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
+        for (int j = 0; j < table.get(scopeNum).size(); j++){
+            if (table.get(scopeNum).get(j).value == id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isInitialized(ArrayList<Scope> scope, String id){
+        for (int i = 0; i < scope.size(); i++){
+            if (scope.get(i).value == id){
+                if (scope.get(i).isInit == true){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 class Scope{
@@ -79,22 +132,28 @@ class Scope{
     }
 
     public Scope(int scope, String type, String name, int line, boolean init, boolean used){
-
+        this.currentScope = scope;
+        this.type = type;
+        this.value = name;
+        this.line = line;
+        this.isInit = init;
+        this.isUsed = used;
     }
 
 }
 
 class ScopeList {
 
-    ArrayList<Scope> list = new ArrayList<>();
+    //ArrayList<Scope> list = new ArrayList<>();
+    Scope[] list = new Scope[26];
     int scopeNum;
 
     public ScopeList(int scope){
+        //this.list;
         this.scopeNum = scope;
     }
 
-    public void add(){
-        
-    }
+
+
 }
 

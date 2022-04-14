@@ -10,6 +10,8 @@ CMPT 432
 Project 2
 */
 package com.company;
+import com.sun.source.tree.IfTree;
+
 import java.util.ArrayList;
 
     class CSTNode {
@@ -50,6 +52,20 @@ import java.util.ArrayList;
 
         public void addNode(String nodeType, String nTerm){
             CSTNode node = new CSTNode(nodeType, nTerm);
+            if (this.root == null){
+                this.root = node;
+                //node.parent = null;
+            }
+            else{
+                node.parent = this.current;
+                this.current.children.add(node);
+            }
+            if (nodeType != "leaf")
+                this.current = node;
+        }
+
+        public void addNode(String nodeType, String nTerm, int line){
+            CSTNode node = new CSTNode(nodeType, nTerm, line);
             if (this.root == null){
                 this.root = node;
                 //node.parent = null;
@@ -139,6 +155,7 @@ import java.util.ArrayList;
 
         //put an end to the children
         public void moveUp(){
-            this.current = this.current.parent;
+            if (this.current.parent != null)
+                this.current = this.current.parent;
         }
 }
