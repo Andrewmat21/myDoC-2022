@@ -355,11 +355,9 @@ public class Parser {
     public void parseBoolOp() {
         tree.addNode("branch", "BoolOp");
         if (getToken().tokenType == "EQUALITY_OP") {
-            //ast.addNode("branch", "Equality");
             match("EQUALITY_OP");
         }
         else {
-            //ast.addNode("branch", "Equality");
             match("INEQUALITY_OP");
         }
         tree.moveUp();
