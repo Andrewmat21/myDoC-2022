@@ -28,9 +28,11 @@ public class SemanticA {
             case "PrintStatement":
                 analyze(n.children.get(2), progNum);
                 existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                // if the id exists...check for initialization
                 if (existance != -1)
-                    if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
+                    if(isInitialized(symbolTable.get(existance), n.children.get(0).name)){
                         break;
+                    }
                     else{
                         //print warning: var being used but never initialized
                         break;
@@ -86,6 +88,8 @@ public class SemanticA {
         }
     }
 
+    // checks to see if var exists in program
+    // if true, returns index of id occurrence in the nearest scope. else, return -1
     public static int exists(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
         for (int i = scopeNum; i >= 0; i--){
             for (int j = 0; j < table.get(i).size(); j++){
@@ -97,6 +101,7 @@ public class SemanticA {
         return -1;
     }
 
+    // checks to see if var exists in specified scope
     public static boolean existsInScope(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
         for (int j = 0; j < table.get(scopeNum).size(); j++){
             if (table.get(scopeNum).get(j).value == id){
@@ -115,6 +120,10 @@ public class SemanticA {
             }
         }
         return false;
+    }
+
+    public static void typeCheck(){
+
     }
 }
 
