@@ -12,6 +12,7 @@ public class SemanticA {
 
     boolean isInitialized;
 
+    // Symbol Table is an array list of scope array lists
     ArrayList<ArrayList<Scope>> symbolTable = new ArrayList<ArrayList<Scope>>();
 
     public SemanticA(){
@@ -29,7 +30,9 @@ public class SemanticA {
                 analyze(n.children.get(2), progNum);
                 existance = exists(symbolTable, n.children.get(0).name, currentScope);
                 // if the id exists...check for initialization
-                if (existance != -1)
+                if (existance != -1){
+                    // change isUsed for id to true
+                    use(symbolTable.get(existance), n.children.get(0).name);
                     if(isInitialized(symbolTable.get(existance), n.children.get(0).name)){
                         break;
                     }
@@ -37,6 +40,7 @@ public class SemanticA {
                         //print warning: var being used but never initialized
                         break;
                     }
+                }
                 break;
             case "VarDecl":
                 //analyze(n.children.get(1), progNum);
@@ -58,6 +62,11 @@ public class SemanticA {
                 break;
             case "IfStatement":
             case "AssignmentStatement":
+                existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                // if the id exists...check for initialization
+                if (existance != -1){
+                    //typeCheck(n.children.get(0).type, n.children.get(1).name);
+                }
             case "Id":
                 for (int i = 0; i < currentScope; i++){
                 //symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
@@ -122,8 +131,35 @@ public class SemanticA {
         return false;
     }
 
-    public static void typeCheck(){
+    public static boolean typeCheck(ArrayList<Scope> scope, String id, String type){
+        for (int i = 0; i < scope.size(); i++){
+            if (scope.get(i).value == id){
+                switch (scope.get(i).type){
+                    case"string":
+                    case"int":
+                    case"boolean":
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+
+    public static void use(ArrayList<Scope> s, String id){
+        for (int i = 0; i < s.size(); i++){
+            if (s.get(i).value == id){
+                s.get(i).isUsed = true;
+            }
+        }
+    }
+
+    public static void initialize(ArrayList<Scope> s, String id){
+        for (int i = 0; i < s.size(); i++){
+            if (s.get(i).value == id){
+                s.get(i).isInit = true;
+            }
+        }
     }
 }
 
