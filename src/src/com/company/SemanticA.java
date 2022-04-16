@@ -65,7 +65,10 @@ public class SemanticA {
                 existance = exists(symbolTable, n.children.get(0).name, currentScope);
                 // if the id exists...check for initialization
                 if (existance != -1){
-                    //typeCheck(n.children.get(0).type, n.children.get(1).name);
+                    typeCheck(symbolTable.get(existance), n.children.get(0).name);
+                }
+                else{
+                    //error, it does not exist
                 }
             case "Id":
                 for (int i = 0; i < currentScope; i++){
@@ -98,7 +101,7 @@ public class SemanticA {
     }
 
     // checks to see if var exists in program
-    // if true, returns index of id occurrence in the nearest scope. else, return -1
+    // if true, returns scope # of id occurrence in the nearest scope, else, return -1
     public static int exists(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
         for (int i = scopeNum; i >= 0; i--){
             for (int j = 0; j < table.get(i).size(); j++){
@@ -131,11 +134,12 @@ public class SemanticA {
         return false;
     }
 
-    public static boolean typeCheck(ArrayList<Scope> scope, String id, String type){
+    public static boolean typeCheck(ArrayList<Scope> scope, String val){
         for (int i = 0; i < scope.size(); i++){
-            if (scope.get(i).value == id){
+            if (scope.get(i).value == val){
                 switch (scope.get(i).type){
                     case"string":
+                        //check if the id type is compatible with the
                     case"int":
                     case"boolean":
                     return true;
