@@ -93,10 +93,13 @@ public class SemanticA {
     public void logSymbolTable(int x){
         System.out.println("Program " + x + " Symbol Table");
         System.out.println("----------------------------------------------");
-        System.out.println("Name Type   Scope   Line");
+        System.out.println("Name    Type    Scope    Line");
         System.out.println("----------------------------------------------");
+        
         for (int i = 0; i < symbolTable.size(); i++){
-            System.out.println();
+            for (int j = 0; j < symbolTable.get(i).size(); j++){
+                System.out.println(symbolTable.get(i).get(j).value + "   " + symbolTable.get(i).get(j).type + "    " + i + "    " + symbolTable.get(i).get(j).line);
+            }
         }
     }
 
