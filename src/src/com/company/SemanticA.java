@@ -22,8 +22,11 @@ public class SemanticA {
     public void analyze(CSTNode n, int progNum){
 
         switch (n.name){
+            case "Program":
+                System.out.println("DEBUG Semantic - Program...");
             case "Block":
                 currentScope++;
+                System.out.println("DEBUG Semantic - Block...");
                 symbolTable.add(new ArrayList<Scope>());
                 break;
             case "PrintStatement":
@@ -69,6 +72,8 @@ public class SemanticA {
                 }
                 else{
                     //error, it does not exist
+                    //error++;
+
                 }
             case "Id":
                 for (int i = 0; i < currentScope; i++){
@@ -83,6 +88,10 @@ public class SemanticA {
             }
         }
 
+    }
+
+    public static void logSemantic(){
+        System.out.println("DEBUG Semantic - Block...");
     }
 
     public int errTotal(){
@@ -101,7 +110,7 @@ public class SemanticA {
 
         for (int i = 0; i < symbolTable.size(); i++){
             for (int j = 0; j < symbolTable.get(i).size(); j++){
-                System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + i + "        " + symbolTable.get(i).get(j).line);
+                System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
             }
         }
     }
@@ -176,7 +185,7 @@ public class SemanticA {
 class Scope{
     String value;
     String type;
-    int currentScope;
+    int scope;
     int totalScope;
     int line;
     boolean isInit;
@@ -187,7 +196,7 @@ class Scope{
     }
 
     public Scope(int scope, String type, String name, int line, boolean init, boolean used){
-        this.currentScope = scope;
+        this.scope = scope;
         this.type = type;
         this.value = name;
         this.line = line;
