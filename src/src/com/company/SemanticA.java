@@ -83,7 +83,7 @@ public class SemanticA {
             }
         }
 
-        this.logSymbolTable(progNum);
+        //this.logSymbolTable(progNum);
     }
 
     public void checkId(){
@@ -98,7 +98,7 @@ public class SemanticA {
 
         for (int i = 0; i < symbolTable.size(); i++){
             for (int j = 0; j < symbolTable.get(i).size(); j++){
-                System.out.println(symbolTable.get(i).get(j).value + "   " + symbolTable.get(i).get(j).type + "    " + i + "    " + symbolTable.get(i).get(j).line);
+                System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + i + "        " + symbolTable.get(i).get(j).line);
             }
         }
     }
