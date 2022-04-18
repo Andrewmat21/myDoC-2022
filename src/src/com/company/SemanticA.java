@@ -83,7 +83,10 @@ public class SemanticA {
             }
         }
 
-        //this.logSymbolTable(progNum);
+    }
+
+    public int errTotal(){
+        return error;
     }
 
     public void checkId(){

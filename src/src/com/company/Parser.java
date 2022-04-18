@@ -39,14 +39,24 @@ public class Parser {
             System.out.println();
             System.out.println("INFO  Creating AST for program " + progNum + "...");
             ast.logAST(0, ast.root);
-            // fix semantic statement
+
+            // semantic analysis output statements
             System.out.println();
             SemanticA a = new SemanticA();
             a.analyze(ast.root, progNum);
-            a.logSymbolTable(progNum);
+            System.out.println();
 
             System.out.println();
-            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + progNum + "...");
+            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s)...");
+            if (a.errTotal() == 0) {
+                a.logSymbolTable(progNum);
+            }
+
+            else{
+                System.out.println("INFO  Symbol Table for program " + progNum + ": Skipped due to Semantic Analysis ERROR(s)");
+            }
+            System.out.println();
+            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s)...");
         }
         // skip CST when parse has Errors
         else {
