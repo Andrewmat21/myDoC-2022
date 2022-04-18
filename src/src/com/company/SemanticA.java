@@ -60,7 +60,6 @@ public class SemanticA {
 
                     break;
                 case "WhileStatement":
-                    analyze(n.children.get(2), progNum);
                     existance = exists(symbolTable, n.children.get(0).name, currentScope);
                     if (existance != -1)
                         if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
@@ -93,13 +92,14 @@ public class SemanticA {
             }
         }
         else {
-            if (n.name)
+            //if (n.name)
         }
 
         if (n.children.size() > 0){
             for(int j = 0; j < n.children.size(); j++){
                 analyze(n.children.get(j), progNum);
             }
+            // close scope
         }
 
     }
@@ -124,7 +124,19 @@ public class SemanticA {
 
         for (int i = 0; i < symbolTable.size(); i++){
             for (int j = 0; j < symbolTable.get(i).size(); j++){
-                System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                
+                // add swtch case to output correct spacing
+                switch (symbolTable.get(i).get(j).type){
+                    case "int":
+                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                        break;
+                    case "string":
+                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "  " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                        break;
+                    case "boolean":
+                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + " " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                        break;
+                }
             }
         }
     }
