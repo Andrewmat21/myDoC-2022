@@ -21,65 +21,79 @@ public class SemanticA {
 
     public void analyze(CSTNode n, int progNum){
 
-        switch (n.name){
-            case "Program":
-                System.out.println("DEBUG Semantic - Program...");
-            case "Block":
-                currentScope++;
-                System.out.println("DEBUG Semantic - Block...");
-                symbolTable.add(new ArrayList<Scope>());
-                break;
-            case "PrintStatement":
-                analyze(n.children.get(2), progNum);
-                existance = exists(symbolTable, n.children.get(0).name, currentScope);
-                // if the id exists...check for initialization
-                if (existance != -1){
-                    // change isUsed for id to true
-                    use(symbolTable.get(existance), n.children.get(0).name);
-                    if(isInitialized(symbolTable.get(existance), n.children.get(0).name)){
-                        break;
+        if (n.type == "branch"){
+            switch (n.name){
+                case "Program":
+                    System.out.println("DEBUG Semantic - Program...");
+                case "Block":
+                    currentScope++;
+                    System.out.println("DEBUG Semantic - Block...");
+                    symbolTable.add(new ArrayList<Scope>());
+                    break;
+                case "PrintStatement":
+                    analyze(n.children.get(2), progNum);
+                    existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                    // if the id exists...check for initialization
+                    if (existance != -1){
+                        // change isUsed for id to true
+                        use(symbolTable.get(existance), n.children.get(0).name);
+                        if(isInitialized(symbolTable.get(existance), n.children.get(0).name)){
+                            break;
+                        }
+                        else{
+                            //print warning: var being used but never initialized
+                            break;
+                        }
                     }
-                    else{
-                        //print warning: var being used but never initialized
-                        break;
+                    break;
+                case "VarDecl":
+                    //analyze(n.children.get(1), progNum);
+                    // check if it exists
+                    // if not, add to scope list under currentScope
+                    if (!(existsInScope(symbolTable, n.children.get(1).name, currentScope)))
+                        symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
+                    // if already exists throw error
+                    else {
+                        error++;
+                        System.out.println("ERROR already declared in current scope");
                     }
-                }
-                break;
-            case "VarDecl":
-                //analyze(n.children.get(1), progNum);
-                // check if it exists
-                // if not, add to scope list under currentScope
-                if (!(existsInScope(symbolTable, n.children.get(1).name, currentScope)))
-                    symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
-                break;
-            case "WhileStatement":
-                analyze(n.children.get(2), progNum);
-                existance = exists(symbolTable, n.children.get(0).name, currentScope);
-                if (existance != -1)
-                    if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
-                        break;
-                    else{
-                        //print warning: var being used but never initialized
-                        break;
-                    }
-                break;
-            case "IfStatement":
-            case "AssignmentStatement":
-                existance = exists(symbolTable, n.children.get(0).name, currentScope);
-                // if the id exists...check for initialization
-                if (existance != -1){
-                    typeCheck(symbolTable.get(existance), n.children.get(0).name);
-                }
-                else{
-                    //error, it does not exist
-                    //error++;
 
+                    break;
+                case "WhileStatement":
+                    analyze(n.children.get(2), progNum);
+                    existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                    if (existance != -1)
+                        if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
+                            break;
+                        else{
+                            //print warning: var being used but never initialized
+                            break;
+                        }
+                    break;
+                case "IfStatement":
+                case "AssignmentStatement":
+                    existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                    // if the id exists...check for initialization
+                    if (existance != -1){
+                        typeCheck(symbolTable.get(existance), n.children.get(0).name);
+                    }
+                    else{
+                        //error, it does not exist
+                        //error++;
+                    }
+                case "Id":
+                    for (int i = 0; i < currentScope; i++){
+                    //symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
+                    // case "":
                 }
-            case "Id":
-                for (int i = 0; i < currentScope; i++){
-                //symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
-                // case "":
+                case "Addition":
+                    //
+                case "Equality":
+                case "Inequality":
             }
+        }
+        else {
+            if (n.name)
         }
 
         if (n.children.size() > 0){
