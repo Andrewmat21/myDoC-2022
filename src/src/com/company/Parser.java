@@ -40,6 +40,10 @@ public class Parser {
             System.out.println("INFO  Creating AST for program " + progNum + "...");
             ast.logAST(0, ast.root);
             // fix semantic statement
+            SemanticA a = new SemanticA();
+            a.analyze(ast.root, progNum);
+            a.logSymbolTable(progNum);
+
             System.out.println();
             System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + progNum + "...");
         }
