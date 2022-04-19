@@ -32,7 +32,6 @@ public class SemanticA {
                     symbolTable.add(new ArrayList<Scope>());
                     break;
                 case "PrintStatement":
-                    analyze(n.children.get(2), progNum);
                     existance = exists(symbolTable, n.children.get(0).name, currentScope);
                     // if the id exists...check for initialization
                     if (existance != -1){
@@ -51,13 +50,7 @@ public class SemanticA {
                     //analyze(n.children.get(1), progNum);
                     // check if it exists
                     // if not, add to scope list under currentScope
-                    if (!(existsInScope(symbolTable, n.children.get(1).name, currentScope)))
-                        symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
-                    // if already exists throw error
-                    else {
-                        error++;
-                        System.out.println("ERROR already declared in current scope");
-                    }
+
 
                     break;
                 case "WhileStatement":
@@ -111,12 +104,50 @@ public class SemanticA {
                 analyze(n.children.get(j), progNum);
             }
             // close scope
-            if (n.name == "Block"){
-                currentScope--;
-            }
+            switch (n.name){
+                case "Block":
+                    currentScope--;
+                    break;
+                case "Addition":
+                    //typeCheck(n.children.get(0), n.children.get(1));
+                    // if the id exists...check for initialization
+                    // check if var and type int else if check if digit.
+                    if (isId(n.children.get(1).name)) {
+                        //typeCheck(n.children.get(0).name);
+                        existance = exists(symbolTable, n.children.get(1).name, currentScope);
+                        if (existance != -1) {
+                            if (typeCheck(symbolTable.get(existance), n.children.get(1).name) == "int")
+                                System.out.println("valid");
+                            else
+                                System.out.println("error");
+                                //print error
+                        }
+                        else{
+                            System.out.println("var has not been decalred");
+                        }
+                    }
 
-            if (n.name == "Addition"){
+                    break;
+                case "Equality":
 
+                case"VarDecl":
+                    //System.out.println(existsInScope(symbolTable, n.children.get(1).name, currentScope));
+                    //System.out.println(symbolTable.get(currentScope).size());
+                    //System.out.println(n.children.get(1).name +" "+ currentScope);
+
+                    if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
+                        symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
+                        // if already exists throw error
+                        //System.out.println("ERROR already declared in current scope");
+                        //System.out.println(symbolTable.get(currentScope).size());
+                        //System.out.println();
+                        //System.out.println(existsInScope(symbolTable, n.children.get(1).name, currentScope));
+
+                    }
+                    else {
+                        error++;
+                        System.out.println("ERROR: " + n.children.get(1).name + " already declared in current scope");
+                    }
             }
 
         }
@@ -131,8 +162,13 @@ public class SemanticA {
         return error;
     }
 
-    public void checkId(){
+    public static boolean isId(String id){
         String[] abc = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+        for (int i = 0; i < abc.length; i++){
+            if (id == abc[i])
+                return true;
+        }
+        return false;
     }
 
     public void logSymbolTable(int x){
@@ -176,7 +212,7 @@ public class SemanticA {
     // checks to see if var exists in specified scope
     public static boolean existsInScope(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
         for (int j = 0; j < table.get(scopeNum).size(); j++){
-            if (table.get(scopeNum).get(j).value == id){
+            if (table.get(scopeNum).get(j).value.equals(id)){
                 return true;
             }
         }
@@ -194,19 +230,21 @@ public class SemanticA {
         return false;
     }
 
-    public static boolean typeCheck(ArrayList<Scope> scope, String val){
+    public static String typeCheck(ArrayList<Scope> scope, String val){
         for (int i = 0; i < scope.size(); i++){
-            if (scope.get(i).value == val){
+            if (scope.get(i).value == val) {
                 switch (scope.get(i).type){
                     case"string":
                         //check if the id type is compatible with the
+                        return "string";
                     case"int":
+                        return "int";
                     case"boolean":
-                    return true;
+                        return "boolean";
                 }
             }
         }
-        return false;
+        return "null";
     }
 
 
