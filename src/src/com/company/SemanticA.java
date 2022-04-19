@@ -11,6 +11,7 @@ public class SemanticA {
     int existance;
 
     boolean isInitialized;
+    boolean typeCheck;
 
     // Symbol Table is an array list of scope array lists
     ArrayList<ArrayList<Scope>> symbolTable = new ArrayList<ArrayList<Scope>>();
@@ -74,11 +75,21 @@ public class SemanticA {
                     existance = exists(symbolTable, n.children.get(0).name, currentScope);
                     // if the id exists...check for initialization
                     if (existance != -1){
+                        // check if second node
+                        typeCheck = true;
+                        switch (n.children.get(1).name){
+                            case"Equality":
+                            case"Inequality":
+                            case"Addition":
+                            case"":
+                            default:
+                        }
                         typeCheck(symbolTable.get(existance), n.children.get(0).name);
                     }
                     else{
                         //error, it does not exist
                         //error++;
+                        System.out.println("ERROR already declared in current scope");
                     }
                 case "Id":
                     for (int i = 0; i < currentScope; i++){
@@ -100,6 +111,14 @@ public class SemanticA {
                 analyze(n.children.get(j), progNum);
             }
             // close scope
+            if (n.name == "Block"){
+                currentScope--;
+            }
+
+            if (n.name == "Addition"){
+
+            }
+
         }
 
     }
@@ -124,7 +143,7 @@ public class SemanticA {
 
         for (int i = 0; i < symbolTable.size(); i++){
             for (int j = 0; j < symbolTable.get(i).size(); j++){
-                
+
                 // add swtch case to output correct spacing
                 switch (symbolTable.get(i).get(j).type){
                     case "int":
