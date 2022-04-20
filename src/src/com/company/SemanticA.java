@@ -9,6 +9,7 @@ public class SemanticA {
     int error = 0;
     int warning = 0;
     int existance;
+    String temp;
 
     boolean isInitialized;
     boolean typeCheck;
@@ -116,7 +117,7 @@ public class SemanticA {
                         //typeCheck(n.children.get(0).name);
                         existance = exists(symbolTable, n.children.get(1).name, currentScope);
                         if (existance != -1) {
-                            if (typeCheck(symbolTable.get(existance), n.children.get(1).name) == "int")
+                            if (typeCheck(symbolTable.get(existance), n.children.get(1).name).equals("int"))
                                 System.out.println("valid");
                             else
                                 System.out.println("error");
@@ -129,20 +130,38 @@ public class SemanticA {
 
                     break;
                 case "Equality":
+                    if (isId(n.children.get(0).name)) {
+                        existance = exists(symbolTable, n.children.get(1).name, currentScope);
+                        if (existance != -1) {
+                            temp = typeCheck(symbolTable.get(existance) ,n.children.get(0).name);
 
+                            if (typeCheck(symbolTable.get(existance), n.children.get(1).name) == "int"){
+                                System.out.println("valid");
+                            }
+                            else if (true){
+                                //check for diff types
+                            }
+                            else
+                                System.out.println("error");
+                            //print error
+                        }
+                        else{
+                            System.out.println("var has not been decalred");
+                        }
+
+                    }
+                    else if ((isDigit(n.children.get(0).name))){
+
+                    }
+
+                    else if (n.children.get(0).name.getClass().equals(String.class)){
+
+                    }
                 case"VarDecl":
-                    //System.out.println(existsInScope(symbolTable, n.children.get(1).name, currentScope));
-                    //System.out.println(symbolTable.get(currentScope).size());
-                    //System.out.println(n.children.get(1).name +" "+ currentScope);
-
+                    // if var does exists, add to symbol table
                     if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
                         symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
                         // if already exists throw error
-                        //System.out.println("ERROR already declared in current scope");
-                        //System.out.println(symbolTable.get(currentScope).size());
-                        //System.out.println();
-                        //System.out.println(existsInScope(symbolTable, n.children.get(1).name, currentScope));
-
                     }
                     else {
                         error++;
@@ -165,7 +184,16 @@ public class SemanticA {
     public static boolean isId(String id){
         String[] abc = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
         for (int i = 0; i < abc.length; i++){
-            if (id == abc[i])
+            if (id.equals(abc[i]))
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isDigit(String id){
+        String[] num = {"0","1","2","3","4","5","6","7","8","9"};
+        for (int i = 0; i < num.length; i++){
+            if (id.equals(num[i]))
                 return true;
         }
         return false;
