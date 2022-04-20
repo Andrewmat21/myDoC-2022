@@ -142,9 +142,10 @@ public class SemanticA {
                         else{
                             // log for undeclared variable
                             error++;
-                            System.out.println("ERROR Undecalred Variable");
+                            System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
                     }
+
                     if (isId(n.children.get(1).name)){
                         existance = exists(symbolTable, n.children.get(1).name, currentScope);
                         if (existance != -1) {
@@ -155,7 +156,7 @@ public class SemanticA {
                         else {
                             // log for undeclared variable
                             error++;
-                            System.out.println("ERROR Undecalred variable [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
+                            System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
                             break;
                         }
                     }
