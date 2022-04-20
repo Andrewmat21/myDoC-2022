@@ -310,7 +310,7 @@ public class Parser {
     public void parseId() {
         tree.addNode("branch", "Id");
         System.out.println("DEBUG Parser - Id...");
-        ast.addNode("leaf", getToken().word, getToken().lineNum);
+        ast.addNode("leaf", getToken().word, getToken().lineNum, getToken().position);
         match("ID");
         tree.moveUp();
 
@@ -366,7 +366,7 @@ public class Parser {
     // digit parse
     public void parseDigit() {
         tree.addNode("branch", "Digit");
-        ast.addNode("leaf", getToken().word, getToken().lineNum);
+        ast.addNode("leaf", getToken().word, getToken().lineNum, getToken().position);
         match("DIGIT");
         tree.moveUp();
     }

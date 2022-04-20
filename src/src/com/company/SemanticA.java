@@ -10,6 +10,8 @@ public class SemanticA {
     int warning = 0;
     int existance;
     String temp;
+    String temp2;
+    boolean flag;
 
     boolean isInitialized;
     boolean typeCheck;
@@ -131,32 +133,52 @@ public class SemanticA {
                     break;
                 case "Equality":
                     if (isId(n.children.get(0).name)) {
-                        existance = exists(symbolTable, n.children.get(1).name, currentScope);
+                        existance = exists(symbolTable, n.children.get(0).name, currentScope);
                         if (existance != -1) {
-                            temp = typeCheck(symbolTable.get(existance) ,n.children.get(0).name);
-
-                            if (typeCheck(symbolTable.get(existance), n.children.get(1).name) == "int"){
-                                System.out.println("valid");
-                            }
-                            else if (true){
-                                //check for diff types
-                            }
-                            else
-                                System.out.println("error");
-                            //print error
+                            // log for declared variable
+                            logValidVar(n.children.get(0).name);
+                            System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
                         else{
-                            System.out.println("var has not been decalred");
+                            // log for undeclared variable
+                            error++;
+                            System.out.println("ERROR Undecalred Variable");
                         }
-
                     }
-                    else if ((isDigit(n.children.get(0).name))){
-
+                    if (isId(n.children.get(1).name)){
+                        existance = exists(symbolTable, n.children.get(1).name, currentScope);
+                        if (existance != -1) {
+                            // log for declared variable
+                            logValidVar(n.children.get(1).name);
+                            System.out.println("at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
+                        }
+                        else {
+                            // log for undeclared variable
+                            error++;
+                            System.out.println("ERROR Undecalred variable [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
+                            break;
+                        }
                     }
 
-                    else if (n.children.get(0).name.getClass().equals(String.class)){
-
+                    temp = getType(symbolTable.get(existance) ,n.children.get(0).name);
+                    temp2 = getType(symbolTable.get(existance) ,n.children.get(1).name);
+                    flag = typeCheck(temp, temp2, "Comparison");
+                    if (flag){
+                        System.out.println("valid type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
                     }
+                    else {
+                        System.out.println("ERROR Invalid type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
+                    }
+
+
+
+
+
+
+
+                    /*else if (n.children.get(0).name.getClass().equals(String.class)){
+
+                    }*/
                 case"VarDecl":
                     // if var does exists, add to symbol table
                     if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
@@ -194,6 +216,15 @@ public class SemanticA {
         String[] num = {"0","1","2","3","4","5","6","7","8","9"};
         for (int i = 0; i < num.length; i++){
             if (id.equals(num[i]))
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isBoolean(String id){
+        String[] bools = {"true","false"};
+        for (int i = 0; i < bools.length; i++){
+            if (id.equals(bools[i]))
                 return true;
         }
         return false;
@@ -275,6 +306,46 @@ public class SemanticA {
         return "null";
     }
 
+    public static boolean typeCheck(String type1, String type2, String function){
+        switch (function){
+            case"Comparison":
+                if (type1.equals(type2))
+                    return true;
+            case"AssignmentStatement":
+                if (type1.equals(type2))
+                    return true;
+            case "IfStatement":
+        }
+        return true;
+    }
+
+
+    public static String getType(ArrayList<Scope> scope, String val){
+        if (isId(val)){
+            for (int i = 0; i < scope.size(); i++){
+                if (scope.get(i).value == val) {
+                    switch (scope.get(i).type){
+                        case"string":
+                            //check if the id type is compatible with the
+                            return "string";
+                        case"int":
+                            return "int";
+                        case"boolean":
+                            return "boolean";
+                    }
+                }
+            }
+        }
+        else if (isDigit(val)){
+            return "int";
+        }
+        else if (isBoolean(val)){
+            return "boolean";
+        }
+        else return "string";
+        return "null";
+    }
+
 
     public static void use(ArrayList<Scope> s, String id){
         for (int i = 0; i < s.size(); i++){
@@ -290,6 +361,11 @@ public class SemanticA {
                 s.get(i).isInit = true;
             }
         }
+    }
+
+    public static void logValidVar(String name)
+    {
+        System.out.println("VALID Semantic - Variable [ " + name + " ] ");
     }
 }
 
@@ -314,7 +390,6 @@ class Scope{
         this.isInit = init;
         this.isUsed = used;
     }
-
 }
 
 class ScopeList {
@@ -327,8 +402,5 @@ class ScopeList {
         //this.list;
         this.scopeNum = scope;
     }
-
-
-
 }
 

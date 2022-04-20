@@ -21,6 +21,7 @@ import java.util.ArrayList;
     String type;
     String name;
     int lineNum;
+    int position;
 
     public CSTNode(){}
 
@@ -32,10 +33,11 @@ import java.util.ArrayList;
         this.parent = null;
     }
 
-    public CSTNode(String tokenType, String tokenName, int line) {
+    public CSTNode(String tokenType, String tokenName, int line, int pos) {
         this.type = tokenType;
         this.name = tokenName;
         this.lineNum = line;
+        this.position = pos;
         this.parent = null;
     }
 }
@@ -64,8 +66,8 @@ import java.util.ArrayList;
                 this.current = node;
         }
 
-        public void addNode(String nodeType, String nTerm, int line){
-            CSTNode node = new CSTNode(nodeType, nTerm, line);
+        public void addNode(String nodeType, String nTerm, int line, int pos){
+            CSTNode node = new CSTNode(nodeType, nTerm, line, pos);
             if (this.root == null){
                 this.root = node;
                 //node.parent = null;
