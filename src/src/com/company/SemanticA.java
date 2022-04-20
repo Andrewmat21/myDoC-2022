@@ -12,6 +12,7 @@ public class SemanticA {
     String temp;
     String temp2;
     boolean flag;
+    boolean flag1;
 
     boolean isInitialized;
     boolean typeCheck;
@@ -53,10 +54,11 @@ public class SemanticA {
                     //analyze(n.children.get(1), progNum);
                     // check if it exists
                     // if not, add to scope list under currentScope
-
+                    System.out.println("DEBUG Semantic - VarDecl...");
 
                     break;
                 case "WhileStatement":
+                    System.out.println("DEBUG Semantic - While Statement...");
                     existance = exists(symbolTable, n.children.get(0).name, currentScope);
                     if (existance != -1)
                         if(isInitialized(symbolTable.get(existance), n.children.get(0).name))
@@ -132,6 +134,7 @@ public class SemanticA {
 
                     break;
                 case "Equality":
+                    flag1 = true;
                     if (isId(n.children.get(0).name)) {
                         existance = exists(symbolTable, n.children.get(0).name, currentScope);
                         if (existance != -1) {
@@ -141,6 +144,7 @@ public class SemanticA {
                         }
                         else{
                             // log for undeclared variable
+                            flag1 = false;
                             error++;
                             System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
@@ -155,21 +159,27 @@ public class SemanticA {
                         }
                         else {
                             // log for undeclared variable
+                            flag1 = false;
                             error++;
                             System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
                             break;
                         }
                     }
 
-                    temp = getType(symbolTable.get(existance) ,n.children.get(0).name);
-                    temp2 = getType(symbolTable.get(existance) ,n.children.get(1).name);
-                    flag = typeCheck(temp, temp2, "Comparison");
-                    if (flag){
-                        System.out.println("valid type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
+                    if (flag1){
+                        temp = getType(symbolTable.get(existance) ,n.children.get(0).name);
+                        temp2 = getType(symbolTable.get(existance) ,n.children.get(1).name);
+                        flag = typeCheck(temp, temp2, "Comparison");
+                        if (flag){
+                            System.out.println("VALID Semantic - Type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
+                        }
+                        else {
+                            error++;
+                            System.out.println("ERROR Semantic - Invalid type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
+                        }
                     }
-                    else {
-                        System.out.println("ERROR Invalid type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
-                    }
+                    else
+                        break;
 
 
 
@@ -187,8 +197,9 @@ public class SemanticA {
                         // if already exists throw error
                     }
                     else {
+                        existsWhere(symbolTable, n.children.get(1).name, currentScope);
                         error++;
-                        System.out.println("ERROR: " + n.children.get(1).name + " already declared in current scope");
+                        System.out.println("ERROR Semantic - Duplicate ID [ " + n.children.get(1).name + " ] was found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") - Original ID was previously declared in the current scope on line " + existsWhere(symbolTable, n.children.get(1).name, currentScope));
                     }
             }
 
@@ -277,6 +288,15 @@ public class SemanticA {
             }
         }
         return false;
+    }
+
+    public static int existsWhere(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
+        for (int j = 0; j < table.get(scopeNum).size(); j++){
+            if (table.get(scopeNum).get(j).value.equals(id)){
+                return table.get(scopeNum).get(j).line;
+            }
+        }
+        return -1;
     }
 
     public static boolean isInitialized(ArrayList<Scope> scope, String id){
