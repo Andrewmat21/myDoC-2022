@@ -172,16 +172,16 @@ public class SemanticA {
                             use(symbolTable.get(currentScope),n.children.get(1).name);
 
                             // give warning if ID is used but hasn't been initialized
-                            if (!isInitialized(symbolTable.get(currentScope),n.children.get(1).name)){
+                            if (!isInitialized(symbolTable.get(currentScope),n.children.get(1).name)) {
                                 warning++;
-                                System.out.println("WARNING Semajntic - ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
+                                System.out.println("WARNING Semantic - ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
                             }
                         }
 
                         else{
                             // log for undeclared variable
                             error++;
-                            System.out.println("ERROR Semantic - Undecalred ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            System.out.println("ERROR Semantic - Undeclared ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
 
                         if (!getType(symbolTable.get(currentScope), n.children.get(1).name).equals("int")){
