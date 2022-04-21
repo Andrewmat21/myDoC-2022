@@ -128,8 +128,6 @@ public class SemanticA {
 
                             // not the initialization of the ID
                             initialize(symbolTable.get(currentScope), n.children.get(0).name);
-
-                            // give warning if ID is used but hasn't been initialize
                         }
                         else{
                             // log for undeclared variable
@@ -146,11 +144,15 @@ public class SemanticA {
                             }
                             else {
                                 error++;
-                                System.out.println("ERROR Semantic - Type mismatch with " + n.children.get(0).name + " and "+ n.children.get(1).name);
+                                System.out.println("ERROR Semantic - Type mismatch with " + n.children.get(0).name + " and " + n.children.get(1).name);
                             }
                         }
                         else {
-
+                            temp = getType(symbolTable.get(existance) ,n.children.get(0).name);
+                            if (!temp.equals("int")){
+                                error++;
+                                System.out.println("ERROR Semantic - Type mismatch with " + n.children.get(0).name + " and type [ int ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            }
                         }
                     }
                     break;
@@ -331,7 +333,7 @@ public class SemanticA {
                 case"VarDecl":
                     // if var does exists, add to symbol table
                     if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
-                        symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
+                        symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, n.children.get(1).position ,false, false));
                         logValidVar(n.children.get(1).name);
                         System.out.println("of type " +  n.children.get(0).name + " has been declared at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
                     }
@@ -394,8 +396,20 @@ public class SemanticA {
         return false;
     }
 
-    public static void logWarning(){
+    public void logWarning(int x){
+        for (int i = 0; i < symbolTable.size(); i++){
+            for (int j = 0; j < symbolTable.get(i).size(); j++){
+                if (!symbolTable.get(i).get(j).isInit){
+                    warning++;
+                    System.out.println("DEBUG Semantic - WARNING: ID [ " + symbolTable.get(i).get(j).value + " ] was declared at (" + symbolTable.get(i).get(j).line + ":" + symbolTable.get(i).get(j).position + ") but was never initialized");
+                }
 
+                if (!symbolTable.get(i).get(j).isUsed){
+                    warning++;
+                    System.out.println("DEBUG Semantic - WARNING: ID [ " + symbolTable.get(i).get(j).value + " ] was declared at (" + symbolTable.get(i).get(j).line + ":" + symbolTable.get(i).get(j).position + ") but was never used");
+                }
+            }
+        }
     }
 
     public void logSymbolTable(int x){
@@ -553,6 +567,7 @@ class Scope{
     int scope;
     int totalScope;
     int line;
+    int position;
     boolean isInit;
     boolean isUsed;
 
@@ -560,11 +575,12 @@ class Scope{
 
     }
 
-    public Scope(int scope, String type, String name, int line, boolean init, boolean used){
+    public Scope(int scope, String type, String name, int line, int position ,boolean init, boolean used){
         this.scope = scope;
         this.type = type;
         this.value = name;
         this.line = line;
+        this.position = position;
         this.isInit = init;
         this.isUsed = used;
     }
