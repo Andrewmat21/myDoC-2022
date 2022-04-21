@@ -48,7 +48,7 @@ public class Parser {
 
             // semantic analysis error/warning summary statement
             System.out.println();
-            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s)...");
+            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s) and " + a.warningTotal() + "WARNING(s)");
 
             // print sym table if there are errors
             if (a.errTotal() == 0) {
@@ -59,8 +59,9 @@ public class Parser {
             else {
                 System.out.println("INFO  Symbol Table for program " + progNum + ": Skipped due to Semantic Analysis ERROR(s)");
             }
+
             System.out.println();
-            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s)...");
+            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s) and " + a.warningTotal() + " WARNING(s)");
         }
 
         // skip CST when parse has Errors

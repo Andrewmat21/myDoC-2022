@@ -200,6 +200,7 @@ public class SemanticA {
                         System.out.println("ERROR Semantic - Type mismatch - TYPE [ " + getType(symbolTable.get(currentScope), n.children.get(1).name) + " ] cannot be added to digits of type int");
                         break;
                     }
+                    break;
 
                 case "Equality":
                     flag1 = true;
@@ -343,6 +344,7 @@ public class SemanticA {
                         error++;
                         System.out.println("ERROR Semantic - Duplicate ID [ " + n.children.get(1).name + " ] was found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") - Original ID was previously declared in the current scope on line " + existsWhere(symbolTable, n.children.get(1).name, currentScope));
                     }
+                    break;
 
                 case"PrintStatement":
                     if (isId(n.children.get(0).name)){
@@ -360,13 +362,26 @@ public class SemanticA {
                                 System.out.println("WARNING Semantic - ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
                             }
                         }
+
+                        else {
+                            // log for undeclared variable
+                            flag1 = false;
+                            error++;
+                            System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            break;
+                        }
                     }
+                    break;
             }
         }
     }
 
     public int errTotal(){
         return error;
+    }
+
+    public int warningTotal(){
+        return warning;
     }
 
     public static boolean isId(String id){
@@ -415,7 +430,7 @@ public class SemanticA {
     public void logSymbolTable(int x){
         System.out.println("Program " + x + " Symbol Table");
         System.out.println("----------------------------------------------");
-        System.out.println("Name    Type    Scope    Line");
+        System.out.println("Name    Type    Scope    Line    Position");
         System.out.println("----------------------------------------------");
 
         for (int i = 0; i < symbolTable.size(); i++){
@@ -424,13 +439,13 @@ public class SemanticA {
                 // add swtch case to output correct spacing
                 switch (symbolTable.get(i).get(j).type){
                     case "int":
-                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "     " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line + "        " + symbolTable.get(i).get(j).position);
                         break;
                     case "string":
-                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "  " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + "  " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line + "        " + symbolTable.get(i).get(j).position);
                         break;
                     case "boolean":
-                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + " " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line);
+                        System.out.println(symbolTable.get(i).get(j).value + "       " + symbolTable.get(i).get(j).type + " " + symbolTable.get(i).get(j).scope + "        " + symbolTable.get(i).get(j).line + "        " + symbolTable.get(i).get(j).position);
                         break;
                 }
             }
