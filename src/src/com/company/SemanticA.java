@@ -13,6 +13,7 @@ public class SemanticA {
     String temp2;
     boolean flag;
     boolean flag1;
+    String global;
 
     boolean isInitialized;
     boolean typeCheck;
@@ -26,10 +27,11 @@ public class SemanticA {
 
     public void analyze(CSTNode n, int progNum){
 
-        if (n.type == "branch"){
+        if (n.type.equals("branch")){
             switch (n.name){
                 case "Program":
                     System.out.println("DEBUG Semantic - Program...");
+                    break;
                 case "Block":
                     currentScope++;
                     System.out.println("DEBUG Semantic - Block...");
@@ -55,7 +57,6 @@ public class SemanticA {
                     // check if it exists
                     // if not, add to scope list under currentScope
                     System.out.println("DEBUG Semantic - VarDecl...");
-
                     break;
                 case "WhileStatement":
                     System.out.println("DEBUG Semantic - While Statement...");
@@ -72,7 +73,8 @@ public class SemanticA {
                     System.out.println("DEBUG Semantic - If Statement...");
                 case "AssignmentStatement":
                     System.out.println("DEBUG Semantic - Assignment Statement...");
-                    existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                    break;
+                    /*existance = exists(symbolTable, n.children.get(0).name, currentScope);
                     // if the id exists...check for initialization
                     if (existance != -1){
                         // check if second node
@@ -90,21 +92,18 @@ public class SemanticA {
                         //error, it does not exist
                         //error++;
                         System.out.println("ERROR already declared in current scope");
-                    }
+                    }*/
                 case "Id":
-                    for (int i = 0; i < currentScope; i++){
-                    //symbolTable.get(currentScope).list[0] = new Scope(currentScope, n.name, n.);
-                    // case "":
-                }
                 case "Addition":
-                    //
+                    System.out.println("DEBUG Semantic - Addition...");
+                    break;
                 case "Equality":
+                    System.out.println("DEBUG Semantic - Equality...");
+                    break;
                 case "Inequality":
-
+                    System.out.println("DEBUG Semantic - Inequality...");
+                    break;
             }
-        }
-        else {
-            //if (n.name)
         }
 
         if (n.children.size() > 0){
@@ -116,6 +115,46 @@ public class SemanticA {
                 case "Block":
                     currentScope--;
                     break;
+                case "AssignmentStatement":
+                    // if the id exists...check for initialization
+                    // check if var and type int else if check if digit.
+                    if (isId(n.children.get(0).name)) {
+                        //typeCheck(n.children.get(0).name);
+                        existance = exists(symbolTable, n.children.get(0).name, currentScope);
+
+                        if (existance != -1) {
+                            logValidVar(n.children.get(0).name);
+                            System.out.println("has been initialzed at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+
+                            // not the initialization of the ID
+                            initialize(symbolTable.get(currentScope), n.children.get(0).name);
+
+                            // give warning if ID is used but hasn't been initialize
+                        }
+                        else{
+                            // log for undeclared variable
+                            error++;
+                            System.out.println("ERROR Semantic - Undecalred ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                        }
+
+                        if (!n.children.get(1).equals("Addition")){
+                            temp = getType(symbolTable.get(existance) ,n.children.get(0).name);
+                            temp2 = getType(symbolTable.get(existance) ,n.children.get(1).name);
+                            flag = typeCheck(temp, temp2, "Comparison");
+                            if (flag){
+                                System.out.println("VALID Semantic - Type check - ID [ " + n.children.get(0).name + " ] of type " + temp + " matches assignment type for [ " + n.children.get(1).name + " ] of type " + temp2);
+                            }
+                            else {
+                                error++;
+                                System.out.println("ERROR Semantic - Type mismatch with " + n.children.get(0).name + " and "+ n.children.get(1).name);
+                            }
+                        }
+                        else {
+
+                        }
+                    }
+                    break;
+
                 case "Addition":
                     // if the id exists...check for initialization
                     // check if var and type int else if check if digit.
@@ -133,7 +172,7 @@ public class SemanticA {
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(currentScope),n.children.get(1).name)){
                                 warning++;
-                                System.out.println("WARNING Semantic - ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
+                                System.out.println("WARNING Semajntic - ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
                             }
                         }
 
@@ -150,6 +189,9 @@ public class SemanticA {
 
                     }
                     else if (isDigit(n.children.get(1).name)){
+                        break;
+                    }
+                    else if(n.children.get(1).name.equals("Addition")){
                         break;
                     }
                     else {
@@ -290,6 +332,8 @@ public class SemanticA {
                     // if var does exists, add to symbol table
                     if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
                         symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
+                        logValidVar(n.children.get(1).name);
+                        System.out.println("of type " +  n.children.get(0).name + " has been declared at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
                     }
                     else {
                         // if already exists throw error
@@ -297,14 +341,14 @@ public class SemanticA {
                         error++;
                         System.out.println("ERROR Semantic - Duplicate ID [ " + n.children.get(1).name + " ] was found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") - Original ID was previously declared in the current scope on line " + existsWhere(symbolTable, n.children.get(1).name, currentScope));
                     }
-                    
+
                 case"PrintStatement":
                     if (isId(n.children.get(0).name)){
                         existance = exists(symbolTable, n.children.get(0).name, currentScope);
                         if (existance != -1) {
                             // log for declared variable
                             logValidVar(n.children.get(0).name);
-                            System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            System.out.print("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                             // mark that the ID has been used
                             use(symbolTable.get(currentScope), n.children.get(0).name);
 
@@ -350,6 +394,10 @@ public class SemanticA {
         return false;
     }
 
+    public static void logWarning(){
+
+    }
+
     public void logSymbolTable(int x){
         System.out.println("Program " + x + " Symbol Table");
         System.out.println("----------------------------------------------");
@@ -380,7 +428,7 @@ public class SemanticA {
     public static int exists(ArrayList<ArrayList<Scope>> table, String id, int scopeNum){
         for (int i = scopeNum; i >= 0; i--){
             for (int j = 0; j < table.get(i).size(); j++){
-                if (table.get(i).get(j).value == id){
+                if (table.get(i).get(j).value.equals(id)){
                     return i;
                 }
             }
@@ -452,7 +500,7 @@ public class SemanticA {
     public static String getType(ArrayList<Scope> scope, String val){
         if (isId(val)){
             for (int i = 0; i < scope.size(); i++){
-                if (scope.get(i).value == val) {
+                if (scope.get(i).value.equals(val)) {
                     switch (scope.get(i).type){
                         case"string":
                             //check if the id type is compatible with the
@@ -478,15 +526,16 @@ public class SemanticA {
 
     public static void use(ArrayList<Scope> s, String id){
         for (int i = 0; i < s.size(); i++){
-            if (s.get(i).value == id){
+            if (s.get(i).value.equals(id)){
                 s.get(i).isUsed = true;
+                System.out.print("VALID Semantic - Variable [ " + id + " ] ");
             }
         }
     }
 
     public static void initialize(ArrayList<Scope> s, String id){
         for (int i = 0; i < s.size(); i++){
-            if (s.get(i).value == id){
+            if (s.get(i).value.equals(id)){
                 s.get(i).isInit = true;
             }
         }
@@ -494,7 +543,7 @@ public class SemanticA {
 
     public static void logValidVar(String name)
     {
-        System.out.println("VALID Semantic - Variable [ " + name + " ] ");
+        System.out.print("VALID Semantic - Variable [ " + name + " ] ");
     }
 }
 
