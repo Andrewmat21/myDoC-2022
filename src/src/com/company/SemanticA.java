@@ -102,7 +102,7 @@ public class SemanticA {
                         if (existance != -1) {
                             logValidVar(n.children.get(0).name);
                             System.out.println("has been initialzed at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
-
+//{int a a =1 { int a a = 2 print(a)}{while (a != 5) { a = 1 + a print(a) } print(3 + a)}}$
                             // initialize of the ID
                             initialize(symbolTable.get(currentScope), n.children.get(0).name);
                         }
@@ -377,15 +377,16 @@ public class SemanticA {
                         existance = exists(symbolTable, n.children.get(0).name, currentScope);
                         if (existance != -1) {
                             // log for declared variable
-                            logValidVar(n.children.get(0).name);
-                            System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            //logValidVar(n.children.get(0).name);
+                            //System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                             // mark that the ID has been used
                             use(symbolTable.get(currentScope), n.children.get(0).name);
+                            System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
 
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(currentScope), n.children.get(0).name)) {
                                 warning++;
-                                System.out.println("WARNING Semantic - ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
+                                System.out.println("DEBUG Semantic - WARNING: ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
                             }
                         }
 
@@ -512,7 +513,7 @@ public class SemanticA {
 
     public static boolean isInitialized(ArrayList<Scope> scope, String id){
         for (int i = 0; i < scope.size(); i++){
-            if (scope.get(i).value == id){
+            if (scope.get(i).value.equals(id)){
                 if (scope.get(i).isInit == true){
                     return true;
                 }
@@ -583,7 +584,7 @@ public class SemanticA {
         for (int i = 0; i < s.size(); i++){
             if (s.get(i).value.equals(id)){
                 s.get(i).isUsed = true;
-                System.out.print("VALID Semantic - Variable [ " + id + " ] ");
+                System.out.print("VALID Semantic - ID [ " + id + " ] used ");
             }
         }
     }
