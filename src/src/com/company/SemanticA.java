@@ -297,14 +297,26 @@ public class SemanticA {
                         error++;
                         System.out.println("ERROR Semantic - Duplicate ID [ " + n.children.get(1).name + " ] was found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") - Original ID was previously declared in the current scope on line " + existsWhere(symbolTable, n.children.get(1).name, currentScope));
                     }
+                    
+                case"PrintStatement":
+                    if (isId(n.children.get(0).name)){
+                        existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                        if (existance != -1) {
+                            // log for declared variable
+                            logValidVar(n.children.get(0).name);
+                            System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            // mark that the ID has been used
+                            use(symbolTable.get(currentScope), n.children.get(0).name);
+
+                            // give warning if ID is used but hasn't been initialized
+                            if (!isInitialized(symbolTable.get(currentScope), n.children.get(0).name)) {
+                                warning++;
+                                System.out.println("WARNING Semantic - ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
+                            }
+                        }
+                    }
             }
-
         }
-
-    }
-
-    public static void logSemantic(){
-        System.out.println("DEBUG Semantic - Block...");
     }
 
     public int errTotal(){
