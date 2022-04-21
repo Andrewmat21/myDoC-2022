@@ -69,7 +69,9 @@ public class SemanticA {
                         }
                     break;
                 case "IfStatement":
+                    System.out.println("DEBUG Semantic - If Statement...");
                 case "AssignmentStatement":
+                    System.out.println("DEBUG Semantic - Assignment Statement...");
                     existance = exists(symbolTable, n.children.get(0).name, currentScope);
                     // if the id exists...check for initialization
                     if (existance != -1){
@@ -98,6 +100,53 @@ public class SemanticA {
                     //
                 case "Equality":
                 case "Inequality":
+                    flag1 = true;
+                    if (isId(n.children.get(0).name)) {
+                        existance = exists(symbolTable, n.children.get(0).name, currentScope);
+                        if (existance != -1) {
+                            // log for declared variable
+                            logValidVar(n.children.get(0).name);
+                            System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                        }
+                        else{
+                            // log for undeclared variable
+                            flag1 = false;
+                            error++;
+                            System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                        }
+                    }
+
+                    if (isId(n.children.get(1).name)){
+                        existance = exists(symbolTable, n.children.get(1).name, currentScope);
+                        if (existance != -1) {
+                            // log for declared variable
+                            logValidVar(n.children.get(1).name);
+                            System.out.println("at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
+                        }
+                        else {
+                            // log for undeclared variable
+                            flag1 = false;
+                            error++;
+                            System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
+                            break;
+                        }
+                    }
+
+                    if (flag1){
+                        temp = getType(symbolTable.get(existance) ,n.children.get(0).name);
+                        temp2 = getType(symbolTable.get(existance) ,n.children.get(1).name);
+                        flag = typeCheck(temp, temp2, "Comparison");
+                        if (flag){
+                            System.out.println("VALID Semantic - Type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
+                        }
+                        else {
+                            error++;
+                            System.out.println("ERROR Semantic - Invalid type check with " + n.children.get(0).name + " and "+n.children.get(1).name);
+                        }
+                    }
+
+                    else
+                        break;
             }
         }
         else {
@@ -121,18 +170,28 @@ public class SemanticA {
                         //typeCheck(n.children.get(0).name);
                         existance = exists(symbolTable, n.children.get(1).name, currentScope);
                         if (existance != -1) {
-                            if (typeCheck(symbolTable.get(existance), n.children.get(1).name).equals("int"))
-                                System.out.println("valid");
-                            else
-                                System.out.println("error");
-                                //print error
+                            logValidVar(n.children.get(1).name);
+                            System.out.println("at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
                         }
                         else{
-                            System.out.println("var has not been decalred");
+                            // log for undeclared variable
+                            error++;
+                            System.out.println("ERROR Semantic - Undecalred variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
+
+                        if (!getType(symbolTable.get(currentScope), n.children.get(1).name).equals("int")){
+                            System.out.println("ERROR Semantic - Invalid type check with " + n.children.get(0).name + " and " + n.children.get(1).name);
+                        }
+
+                    }
+                    else if (isDigit(n.children.get(1).name)){
+                        break;
+                    }
+                    else {
+                        System.out.println("ERROR Semantic - Type mismatch - TYPE: " + n.children.get(1).type + " cannot be added to digits of type int");
+                        break;
                     }
 
-                    break;
                 case "Equality":
                     flag1 = true;
                     if (isId(n.children.get(0).name)) {
