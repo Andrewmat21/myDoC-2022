@@ -45,10 +45,12 @@ public class Parser {
             SemanticA a = new SemanticA();
             System.out.println("DEBUG Semantic - Analyzing program " + progNum + "...");
             a.analyze(ast.root, progNum);
+            a.logWarning();
 
             // semantic analysis error/warning summary statement
             System.out.println();
-            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s) and " + a.warningTotal() + "WARNING(s)");
+            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s) and " + a.warningTotal() + " WARNING(s)");
+            System.out.println();
 
             // print sym table if there are errors
             if (a.errTotal() == 0) {
@@ -61,7 +63,6 @@ public class Parser {
             }
 
             System.out.println();
-            System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s) and " + a.warningTotal() + " WARNING(s)");
         }
 
         // skip CST when parse has Errors
