@@ -230,6 +230,14 @@ public class SemanticA {
                             // log for declared variable
                             logValidVar(n.children.get(0).name);
                             System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
+                            // mark that the ID has been used
+                            use(symbolTable.get(currentScope),n.children.get(0).name);
+
+                            // give warning if ID is used but hasn't been initialized
+                            if (!isInitialized(symbolTable.get(currentScope),n.children.get(0).name)){
+                                warning++;
+                                System.out.println("WARNING Semantic - ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
+                            }
                         }
                         else{
                             // log for undeclared variable
@@ -245,6 +253,14 @@ public class SemanticA {
                             // log for declared variable
                             logValidVar(n.children.get(1).name);
                             System.out.println("at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
+                            // mark that the ID has been used
+                            use(symbolTable.get(currentScope),n.children.get(1).name);
+
+                            // give warning if ID is used but hasn't been initialized
+                            if (!isInitialized(symbolTable.get(currentScope),n.children.get(1).name)){
+                                warning++;
+                                System.out.println("WARNING Semantic - ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
+                            }
                         }
                         else {
                             // log for undeclared variable
@@ -274,9 +290,9 @@ public class SemanticA {
                     // if var does exists, add to symbol table
                     if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
                         symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, false, false));
-                        // if already exists throw error
                     }
                     else {
+                        // if already exists throw error
                         existsWhere(symbolTable, n.children.get(1).name, currentScope);
                         error++;
                         System.out.println("ERROR Semantic - Duplicate ID [ " + n.children.get(1).name + " ] was found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") - Original ID was previously declared in the current scope on line " + existsWhere(symbolTable, n.children.get(1).name, currentScope));
