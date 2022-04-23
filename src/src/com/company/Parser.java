@@ -297,6 +297,7 @@ public class Parser {
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
+                ast.moveUp();
                 match("R_PAREN");
                 break;
             case "BOOL_VAL":
