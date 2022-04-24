@@ -261,6 +261,7 @@ public class Parser {
         if (getToken().tokenType == "ADD_OP") {
             parseIntOp();
             parseExpr();
+            ast.moveUp();
         }
         else
             //n+=0;
@@ -297,7 +298,7 @@ public class Parser {
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
-                ast.moveUp();
+                //ast.moveUp();
                 match("R_PAREN");
                 break;
             case "BOOL_VAL":
@@ -307,6 +308,7 @@ public class Parser {
                 break;
         }
         tree.moveUp();
+        ast.moveUp();
     }
 
     //Id parse
