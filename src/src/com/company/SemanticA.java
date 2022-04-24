@@ -1,4 +1,4 @@
-package com.company;
+//package com.company;
 
 
 import java.util.ArrayList;
@@ -148,6 +148,7 @@ public class SemanticA {
 
                         if (!getType(symbolTable.get(existance), n.children.get(1).name).equals("int")){
                             // if second addition child is not of type int, log Type Mismatch Error
+                            error++;
                             System.out.println("DEBUG Semantic - ERROR: Type mismatch found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") - between [ " + n.children.get(0).name +  " ] of type [ " + getType(symbolTable.get(existance), n.children.get(1).name) + " ]");
                         }
 
@@ -159,6 +160,7 @@ public class SemanticA {
                         break;
                     }
                     else {
+                        error++;
                         System.out.println("DEBUG Semantic - ERROR: Type mismatch - TYPE [ " + getType(symbolTable.get(currentScope), n.children.get(1).name) + " ] cannot be added to digits of type int");
                         break;
                     }
@@ -194,10 +196,6 @@ public class SemanticA {
                         existance = exists(symbolTable, n.children.get(1).name, currentScope);
                         if (existance != -1) {
                             // log for declared variable
-                            // FIX THIS
-                            //logValidVar(n.children.get(1).name);
-                            System.out.println("at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
-
 
                             // mark that the ID has been used
                             use(symbolTable.get(currentScope),n.children.get(1).name, n.children.get(1).lineNum, n.children.get(1).position);
@@ -367,7 +365,7 @@ public class SemanticA {
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(existance),n.children.get(0).name)){
                                 warning++;
-                                System.out.println("WARNING Semantic - ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
+                                System.out.println("DEBUG Semantic - WARNING: ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
                             }
                         }
                         else{

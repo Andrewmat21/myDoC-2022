@@ -9,7 +9,7 @@ Andrew Mathew
 CMPT 432
 Dr. Labouseur
 */
-package com.company;
+//package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -298,7 +298,7 @@ public class Parser {
                 parseExpr();
                 parseBoolOp();
                 parseExpr();
-                //ast.moveUp();
+                ast.moveUp();
                 match("R_PAREN");
                 break;
             case "BOOL_VAL":
@@ -308,7 +308,7 @@ public class Parser {
                 break;
         }
         tree.moveUp();
-        ast.moveUp();
+        //ast.moveUp();
     }
 
     //Id parse

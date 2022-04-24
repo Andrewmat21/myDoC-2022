@@ -1,6 +1,6 @@
 # myDoC-2022
 
-please grade the 'parser' branch
+please grade the 'main' branch for Project 3
 
 How to access my work:
 
@@ -10,7 +10,7 @@ Next, navigate to folder:
 
 C: :\DoC\myDoC-2022\src\src\com\company>javac Compiler.java
 
-Use parseTest.txt for project 2
+Use semTest.txt for project 3
 
  make sure test text file is stored in same folder as Compiler.java and Token.java
  
