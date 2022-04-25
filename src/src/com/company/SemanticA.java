@@ -99,8 +99,8 @@ public class SemanticA {
                         //check if addition statement is  ahead
                         if (!n.children.get(1).name.equals("Addition")){
                             try {
-                                temp = getType(symbolTable.get(existence) ,n.children.get(0).name);
-                                temp2 = getType(symbolTable.get(existence) ,n.children.get(1).name);
+                                temp = getType(symbolTable.get(existence), n.children.get(0).name);
+                                temp2 = getType(symbolTable.get(existence), n.children.get(1).name);
                                 flag = typeCheck(temp, temp2);
                             } catch (IndexOutOfBoundsException e){
                                 break;
@@ -115,7 +115,7 @@ public class SemanticA {
                             }
                         }
                         else {
-                            temp = getType(symbolTable.get(existence) ,n.children.get(0).name);
+                            temp = getType(symbolTable.get(existence), n.children.get(0).name);
                             if (!temp.equals("int")){
                                 error++;
                                 System.out.println("DEBUG Semantic - ERROR: Type mismatch with " + n.children.get(0).name + " and type [ int ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
@@ -219,11 +219,15 @@ public class SemanticA {
                     else if(n.children.get(1).name.equals("Addition")){
                         break;
                     }
+                    else if (n.children.get(1).name.equals("Equality") || n.children.get(1).name.equals("Inequality")){
+                        break;
+                    }
 
                     if (flag1){
                         temp = getType(symbolTable.get(existence) ,n.children.get(0).name);
                         temp2 = getType(symbolTable.get(existence) ,n.children.get(1).name);
                         flag = typeCheck(temp, temp2);
+
                         if (flag){
                             System.out.println("VALID Semantic - Type check - ID [ " + n.children.get(0).name + " ] of type " + temp + " matches is valid comparison type for [ " + n.children.get(1).name + " ] of type " + temp2);
                         }
@@ -269,7 +273,7 @@ public class SemanticA {
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(currentScope),n.children.get(1).name)){
                                 warning++;
-                                System.out.println("WARNING Semantic - ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
+                                System.out.println("DEBUG Semantic - WARNING: ID [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ") is used but was never initialized");
                             }
                         }
                         else {
@@ -279,6 +283,12 @@ public class SemanticA {
                             System.out.println("DEBUG Semantic - ERROR: Undeclared variable [ " + n.children.get(1).name + " ] found at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
                             break;
                         }
+                    }
+                    else if(n.children.get(1).name.equals("Addition")){
+                        break;
+                    }
+                    else if (n.children.get(1).name.equals("Equality") || n.children.get(1).name.equals("Inequality")){
+                        break;
                     }
 
                     if (flag1){

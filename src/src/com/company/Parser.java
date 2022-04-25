@@ -337,14 +337,14 @@ public class Parser {
             parseCharList();
         }
         else {
-            ast.addNode("leaf",temp);
+            ast.addNode("leaf", temp);
             match("empty");
         }
         temp = "";
         tree.moveUp();
     }
 
-    //find type parse
+    //type parse
     public void parseType() {
         tree.addNode("branch", "Type");
         switch (getToken().word) {
