@@ -9,7 +9,7 @@ Andrew Mathew
 CMPT 432
 Dr. Labouseur
 */
-//package com.company;
+package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -37,8 +37,6 @@ public class Parser {
             System.out.println("INFO  Creating CST for program " + progNum + "...");
             tree.logCST(0, tree.root);
             System.out.println();
-            System.out.println("INFO  Creating AST for program " + progNum + "...");
-            ast.logAST(0, ast.root);
 
             // semantic analysis output statements
             System.out.println();
@@ -54,12 +52,20 @@ public class Parser {
 
             // print sym table if there are errors
             if (a.errTotal() == 0) {
+                // create AST if no errors in Semantic Analysis
+                System.out.println("INFO  Creating AST for program " + progNum + "...");
+                System.out.println();
+                ast.logAST(0, ast.root);
+
+                // output symbol table if there are no errors
+                System.out.println();
                 a.logSymbolTable(progNum);
+
             }
 
             // else don't
             else {
-                System.out.println("INFO  Symbol Table for program " + progNum + ": Skipped due to Semantic Analysis ERROR(s)");
+                System.out.println("INFO  AST and Symbol Table for program " + progNum + ": Skipped due to Semantic Analysis ERROR(s)");
             }
 
             System.out.println();
