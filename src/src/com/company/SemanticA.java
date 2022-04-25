@@ -79,8 +79,8 @@ public class SemanticA {
                     currentScope--;
                     break;
                 case "AssignmentStatement":
-                    // if the id exists...check for initialization
-                    // check if var and type int else if check if digit.
+
+                    // check if var
                     if (isId(n.children.get(0).name)) {
 
                         existence = exists(symbolTable, n.children.get(0).name, currentScope);
@@ -95,11 +95,17 @@ public class SemanticA {
                             error++;
                             System.out.println("DEBUG Semantic - ERROR: Undeclared ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
-                        //try()
+
+                        //check if addition statement is  ahead
                         if (!n.children.get(1).name.equals("Addition")){
-                            temp = getType(symbolTable.get(existence) ,n.children.get(0).name);
-                            temp2 = getType(symbolTable.get(existence) ,n.children.get(1).name);
-                            flag = typeCheck(temp, temp2);
+                            try {
+                                temp = getType(symbolTable.get(existence) ,n.children.get(0).name);
+                                temp2 = getType(symbolTable.get(existence) ,n.children.get(1).name);
+                                flag = typeCheck(temp, temp2);
+                            } catch (IndexOutOfBoundsException e){
+                                break;
+                            }
+
                             if (flag){
                                 System.out.println("VALID Semantic - Type check - ID [ " + n.children.get(0).name + " ] of type " + temp + " matches assignment type for [ " + n.children.get(1).name + " ] of type " + temp2);
                             }
@@ -325,8 +331,7 @@ public class SemanticA {
                     if (isId(n.children.get(0).name)) {
                         existence = exists(symbolTable, n.children.get(0).name, currentScope);
                         if (existence != -1) {
-                            // log for declared variable
-                            //logValidVar(n.children.get(0).name, n.children.get(0).lineNum, n.children.get(0).position);
+
                             // mark that the ID has been used
                             use(symbolTable.get(currentScope),n.children.get(0).name, n.children.get(0).lineNum, n.children.get(0).position);
                             /*if (use(symbolTable.get(currentScope), n.children.get(0).name)){
@@ -361,6 +366,7 @@ public class SemanticA {
                             }
                         }
                         else{
+
                             // log for undeclared variable
                             flag1 = false;
                             error++;
@@ -386,6 +392,7 @@ public class SemanticA {
                         }
 
                         else {
+
                             // log for undeclared variable
                             flag1 = false;
                             error++;
@@ -610,18 +617,6 @@ class Scope{
         this.position = position;
         this.isInit = init;
         this.isUsed = used;
-    }
-}
-
-class ScopeList {
-
-    //ArrayList<Scope> list = new ArrayList<>();
-    Scope[] list = new Scope[26];
-    int scopeNum;
-
-    public ScopeList(int scope){
-        //this.list;
-        this.scopeNum = scope;
     }
 }
 
