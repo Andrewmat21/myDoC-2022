@@ -4,7 +4,7 @@ public class CodeGeneration {
 
     int position = 0;
     String generatedCode[] = new String[255];
-    
+
 
     public void generate(CSTNode n, int progNum){
         switch (n.type){

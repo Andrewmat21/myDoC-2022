@@ -39,7 +39,6 @@ public class Parser {
             System.out.println();
 
             // semantic analysis output statements
-            System.out.println();
             SemanticA a = new SemanticA();
             System.out.println("DEBUG Semantic - Analyzing program " + progNum + "...");
             a.analyze(ast.root, progNum);
