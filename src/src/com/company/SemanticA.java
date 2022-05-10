@@ -80,7 +80,6 @@ public class SemanticA {
                     currentScope--;
                     break;
                 case "AssignmentStatement":
-
                     // check if var
                     if (isId(n.children.get(0).name)) {
 
