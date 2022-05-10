@@ -7,8 +7,11 @@ public class CodeGeneration {
     int position = 0;
     int tempX = 0;
     int currentScope = -1;
+    String Temp;
+    int offSet = 0;
 
-    ArrayList<Static>staticData =new ArrayList<Static>();
+    ArrayList<Static> staticData = new ArrayList<Static>();
+    ArrayList<Jump> jumpTable = new ArrayList<Jump>();
 
     String code[] = new String[255];
 
@@ -43,11 +46,15 @@ public class CodeGeneration {
                 position++;
 
                 System.out.println("DEBUG CodeGen - Writing [T" + tempX + "] into memory");
-                code[position] = "T" + tempX;
+                Temp = "T" + tempX;
+                code[position] = Temp;
+                Static s = new Static(Temp, n.name, currentScope, offSet);
+
+                offSet++;
                 tempX++;
                 position++;
 
-                System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+                System.out.println("DEBUG CodeGen - Writing [00] into memory");
                 code[position] = "00";
                 position++;
                 break;
@@ -113,7 +120,7 @@ public class CodeGeneration {
 }
 
 class Static{
-    public Static(int temp, String varName, int scope, int offSet){
+    public Static(String temp, String varName, int scope, int offSet){
 
     }
 }
