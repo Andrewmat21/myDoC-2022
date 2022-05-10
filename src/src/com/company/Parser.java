@@ -45,7 +45,6 @@ public class Parser {
             a.logWarning();
 
             // semantic analysis error/warning summary statement
-            System.out.println();
             System.out.println("INFO  Semantic Analyzer - Semantic Analysis completed with " + a.errTotal() + " ERROR(s) and " + a.warningTotal() + " WARNING(s)");
             System.out.println();
 
@@ -53,12 +52,18 @@ public class Parser {
             if (a.errTotal() == 0) {
                 // create AST if no errors in Semantic Analysis
                 System.out.println("INFO  Creating AST for program " + progNum + "...");
-                System.out.println();
                 ast.logAST(0, ast.root);
 
                 // output symbol table if there are no errors
                 System.out.println();
                 a.logSymbolTable(progNum);
+                System.out.println();
+
+                // output for Code Generation
+                System.out.println("INFO  Generating Code for program " + progNum + "...");
+                CodeGeneration cg = new CodeGeneration();
+                cg.generate(ast.root, progNum);
+                cg.logCode();
 
             }
 

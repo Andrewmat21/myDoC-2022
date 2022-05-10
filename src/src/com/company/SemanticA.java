@@ -73,9 +73,10 @@ public class SemanticA {
             for(int j = 0; j < n.children.size(); j++){
                 analyze(n.children.get(j), progNum);
             }
-            // close scope
+
             switch (n.name){
                 case "Block":
+                    // close scope
                     currentScope--;
                     break;
                 case "AssignmentStatement":
@@ -455,9 +456,9 @@ public class SemanticA {
 
     public void logSymbolTable(int x){
         System.out.println("Program " + x + " Symbol Table");
-        System.out.println("----------------------------------------------");
+        System.out.println("---------------------------------------------");
         System.out.println("Name    Type    Scope    Line    Position");
-        System.out.println("----------------------------------------------");
+        System.out.println("---------------------------------------------");
 
         for (int i = 0; i < symbolTable.size(); i++){
             for (int j = 0; j < symbolTable.get(i).size(); j++){
