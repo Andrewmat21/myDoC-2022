@@ -49,13 +49,14 @@ public class CodeGeneration {
                 Temp = "T" + tempX;
                 code[position] = Temp;
                 Static s = new Static(Temp, n.name, currentScope, offSet);
+                staticData.add(s);
 
                 offSet++;
                 tempX++;
                 position++;
 
-                System.out.println("DEBUG CodeGen - Writing [00] into memory");
-                code[position] = "00";
+                System.out.println("DEBUG CodeGen - Writing [XX] into memory");
+                code[position] = "XX";
                 position++;
                 break;
 
@@ -116,6 +117,10 @@ public class CodeGeneration {
                 j = 0;
             }
         }
+    }
+
+    public void backpatch(){
+
     }
 }
 
