@@ -25,26 +25,30 @@ public class CodeGeneration {
 
         switch (n.name) {
             case "Block":
-
+                // enter new scope
                 currentScope++;
                 System.out.println("DEBUG CodeGen - Generating Block on line " + n.lineNum);
                 System.out.println("DEBUG CodeGen - Entering Scope " + currentScope);
                 break;
 
             case "VarDecl":
-
+                // add opcodes for new var
+                // load accumulator
                 System.out.println("DEBUG CodeGen - Writing [A9] into memory");
                 code[position] = "A9";
                 position++;
 
+                //auto intialize to 0
                 System.out.println("DEBUG CodeGen - Writing [00] into memory");
                 code[position] = "00";
                 position++;
 
+                // store accumulator contents in memory
                 System.out.println("DEBUG CodeGen - Writing [8D] into memory");
                 code[position] = "8D";
                 position++;
 
+                // add static data
                 System.out.println("DEBUG CodeGen - Writing [T" + tempX + "] into memory");
                 Temp = "T" + tempX;
                 code[position] = Temp;
@@ -61,9 +65,17 @@ public class CodeGeneration {
                 break;
 
             case "AssignmentStatement":
+                System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                code[position] = "A9";
+                position++;
 
+                // intialize to var val
+                System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                code[position] = "0" + n.children.get(1);
+                position++;
                 break;
             case "PrintStatement":
+
                 break;
             case "Addition":
                 break;
