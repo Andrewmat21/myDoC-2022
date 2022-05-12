@@ -2,6 +2,8 @@ package com.company;
 
 import java.util.ArrayList;
 
+import static com.company.SemanticA.isId;
+
 public class CodeGeneration {
 
     int position = 0;
@@ -24,6 +26,23 @@ public class CodeGeneration {
     public void generate(CSTNode n, int progNum) {
 
         switch (n.name) {
+            case "Program":
+                //store false
+                System.out.println("DEBUG CodeGen - Writing [true] into heap memory");
+                code[245] = toHex("f");
+                code[246] = toHex("a");
+                code[247] = toHex("l");
+                code[248] = toHex("s");
+                code[249] = toHex("e");
+
+                //store true
+                System.out.println("DEBUG CodeGen - Writing [A9] into heap memory");
+                code[251] = toHex("t");
+                code[252] = toHex("r");
+                code[253] = toHex("u");
+                code[254] = toHex("e");
+
+                break;
             case "Block":
                 // enter new scope
                 currentScope++;
@@ -52,7 +71,7 @@ public class CodeGeneration {
                 System.out.println("DEBUG CodeGen - Writing [T" + tempX + "] into memory");
                 Temp = "T" + tempX;
                 code[position] = Temp;
-                Static s = new Static(Temp, n.name, currentScope, offSet);
+                Static s = new Static(Temp, "XX", n.name, currentScope, offSet);
                 staticData.add(s);
 
                 offSet++;
@@ -99,10 +118,18 @@ public class CodeGeneration {
                     currentScope--;
                     break;
                 case "VarDecl":
+                    //isId()
                     break;
                 case "AssignmentStatement":
                     break;
                 case "PrintStatement":
+                    switch (n.children.get(0).name){
+                        case "d":
+                        case "a":
+                        case "w":
+                        case "s":
+                        case "b":
+                    }
                     break;
                 case "Addition":
                     break;
@@ -134,10 +161,16 @@ public class CodeGeneration {
     public void backpatch(){
 
     }
+
+    public static String toHex(String s){
+        char c = s.charAt(0);
+        int ascii = (int)c;
+        return Integer.toHexString(ascii);
+    }
 }
 
 class Static{
-    public Static(String temp, String varName, int scope, int offSet){
+    public Static(String temp, String temp2, String varName, int scope, int offSet){
 
     }
 }
