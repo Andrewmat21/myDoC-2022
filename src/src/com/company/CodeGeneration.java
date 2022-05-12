@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static com.company.SemanticA.isId;
 
@@ -15,10 +16,10 @@ public class CodeGeneration {
     ArrayList<Static> staticData = new ArrayList<Static>();
     ArrayList<Jump> jumpTable = new ArrayList<Jump>();
 
-    String code[] = new String[255];
+    String code[] = new String[256];
 
     public CodeGeneration() {
-        for (int i = 0; i < 255; i++) {
+        for (int i = 0; i < 256; i++) {
             code[i] = "00";
         }
     }
@@ -28,7 +29,7 @@ public class CodeGeneration {
         switch (n.name) {
             case "Program":
                 //store false
-                System.out.println("DEBUG CodeGen - Writing [true] into heap memory");
+                System.out.println("DEBUG CodeGen - Writing [false] into heap memory");
                 code[245] = toHex("f");
                 code[246] = toHex("a");
                 code[247] = toHex("l");
@@ -36,7 +37,7 @@ public class CodeGeneration {
                 code[249] = toHex("e");
 
                 //store true
-                System.out.println("DEBUG CodeGen - Writing [A9] into heap memory");
+                System.out.println("DEBUG CodeGen - Writing [true] into heap memory");
                 code[251] = toHex("t");
                 code[252] = toHex("r");
                 code[253] = toHex("u");
@@ -152,7 +153,7 @@ public class CodeGeneration {
                 System.out.print(code[i] + " ");
                 j++;
             } else {
-                System.out.println();
+                System.out.println(code[i] + " ");
                 j = 0;
             }
         }
@@ -165,7 +166,7 @@ public class CodeGeneration {
     public static String toHex(String s){
         char c = s.charAt(0);
         int ascii = (int)c;
-        return Integer.toHexString(ascii);
+        return Integer.toHexString(ascii).toUpperCase();
     }
 }
 
