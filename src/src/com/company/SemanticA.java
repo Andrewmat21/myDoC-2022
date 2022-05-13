@@ -133,7 +133,6 @@ public class SemanticA {
                     }
 
                     break;
-
                 case "Addition":
                     // if the id exists...check for initialization
                     // check if var

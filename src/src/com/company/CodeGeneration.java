@@ -321,7 +321,7 @@ public class CodeGeneration {
 
                         //check if string is already in heap memory
                         heapTemp = inHeap(heapMem, str);
-                        if (heapTemp != -1){
+                        if (heapTemp != -1) {
                             code[position] = Integer.toHexString(heapTemp).toUpperCase();
                             position++;
                         }
@@ -348,11 +348,9 @@ public class CodeGeneration {
                         position++;
                     }
                     // addition
-                    else if (n.children.get(1).name.equals("Addition")){
+                    else if (n.children.get(1).name.equals("Addition")) {
                         this.genAddition(n.children.get(1), currentScope);
-                    }
-
-                    else if (isId(n.children.get(1).name)) {
+                    } else if (isId(n.children.get(1).name)) {
 
                         System.out.println("DEBUG CodeGen - Writing [AD] into memory");
                         code[position] = "AD";
@@ -365,9 +363,7 @@ public class CodeGeneration {
                         temporaryStaticVar2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
                         code[position] = temporaryStaticVar2;
                         position++;
-                    }
-
-                    else if (n.children.get(1).name.equals("Addition")){
+                    } else if (n.children.get(1).name.equals("Addition")) {
 
                     }
 
@@ -392,7 +388,7 @@ public class CodeGeneration {
                     System.out.println("DEBUG CodeGen - Generating Op Codes for Printing a(n) " + n.children.get(0).name);
 
                     // print id
-                    if (isId(n.children.get(0).name)){
+                    if (isId(n.children.get(0).name)) {
                         System.out.println("DEBUG CodeGen - Writing [AC] into memory");
                         code[position] = "AC";
                         position++;
@@ -404,10 +400,26 @@ public class CodeGeneration {
                         temporaryStaticVar2 = checkStatic(staticData, n.children.get(0).name, currentScope, 2);
                         code[position] = temporaryStaticVar2;
                         position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        if (n.children.get(0).value == ("string") || n.children.get(0).value == ("boolean")) {
+                            System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                            code[position] = "02";
+                            position++;
+                        } else {
+
+                            System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                            code[position] = "01";
+                            position++;
+                        }
+
                     }
 
                     // print digit
-                    else if (isDigit(n.children.get(0).name)){
+                    else if (isDigit(n.children.get(0).name)) {
                         System.out.println("DEBUG CodeGen - Writing [A0] into memory");
                         code[position] = "A0";
                         position++;
@@ -415,12 +427,46 @@ public class CodeGeneration {
                         System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(0).name + "] into memory");
                         code[position] = "0" + n.children.get(0).name;
                         position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                        code[position] = "01";
+                        position++;
                     }
 
-                    else if (n.children.get(0).name == "Addition"){
+                    else if (n.children.get(0).name == "Addition") {
+                        this.genAddition(n.children.get(0), currentScope);
+                    }
 
+                    else if (n.children.get(0).value == "string") {
 
-                        this.genAddition(/*staticData, code, position, */n.children.get(0), currentScope);
+                        System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        // check if string already exists in heap mem
+                        String str = n.children.get(1).name;
+                        int heapTemp;
+
+                        //check if string is already in heap memory
+                        heapTemp = inHeap(heapMem, str);
+                        if (heapTemp != -1) {
+                            code[position] = Integer.toHexString(heapTemp).toUpperCase();
+                            position++;
+                        }
+
+                        //reuse heap pointer if already exists
+                        else {
+                            for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
+                                code[heap] = toHex(str.charAt(i));
+                                heap--;
+                            }
+                            code[position] = Integer.toHexString(heap+1).toUpperCase();
+                            position++;
+                        }
                     }
 
                     else if (n.children.get(0).value == "boolean"){
@@ -435,22 +481,6 @@ public class CodeGeneration {
                             code[position] = "F5";
                         position++;
 
-                    }
-
-                    System.out.println("DEBUG CodeGen - Writing [A2] into memory");
-                    code[position] = "A2";
-                    position++;
-
-                    if (n.children.get(0).value == ("string") || n.children.get(0).value == ("boolean")){
-                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
-                        code[position] = "02";
-                        position++;
-                    }
-                    else {
-
-                        System.out.println("DEBUG CodeGen - Writing [01] into memory");
-                        code[position] = "01";
-                        position++;
                     }
 
                     System.out.println("DEBUG CodeGen - Writing [FF] into memory");
@@ -499,8 +529,8 @@ public class CodeGeneration {
 
     public static int inHeap(ArrayList<Heap> heap, String s) {
         for (int i = 0; i < heap.size(); i++){
-            if (heap.get(i).t.equals(s))
-                return heap.get(i).i;
+            if (heap.get(i).word.equals(s))
+                return heap.get(i).index;
         }
         return -1;
     }
@@ -653,11 +683,11 @@ class Jump{
 }
 
 class Heap{
-    String t;
-    int i;
-    public Heap(String string, int index){
-        this.t = string;
-        this.i = index;
+    String word;
+    int index;
+    public Heap(String string, int i){
+        this.word = string;
+        this.index = i;
     }
 }
 
