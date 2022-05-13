@@ -3,6 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.company.SemanticA.isDigit;
 import static com.company.SemanticA.isId;
 
 public class CodeGeneration {
@@ -12,9 +13,11 @@ public class CodeGeneration {
     int currentScope = -1;
     String Temp;
     int offSet = 0;
+    int heap = 243;
 
     ArrayList<Static> staticData = new ArrayList<Static>();
     ArrayList<Jump> jumpTable = new ArrayList<Jump>();
+    ArrayList<Heap> heapMem = new ArrayList<Heap>();
 
     String code[] = new String[256];
 
@@ -30,18 +33,18 @@ public class CodeGeneration {
             case "Program":
                 //store false
                 System.out.println("DEBUG CodeGen - Writing [false] into heap memory");
-                code[245] = toHex("f");
-                code[246] = toHex("a");
-                code[247] = toHex("l");
-                code[248] = toHex("s");
-                code[249] = toHex("e");
+                code[245] = toHex('f');
+                code[246] = toHex('a');
+                code[247] = toHex('l');
+                code[248] = toHex('s');
+                code[249] = toHex('e');
 
                 //store true
                 System.out.println("DEBUG CodeGen - Writing [true] into heap memory");
-                code[251] = toHex("t");
-                code[252] = toHex("r");
-                code[253] = toHex("u");
-                code[254] = toHex("e");
+                code[251] = toHex('t');
+                code[252] = toHex('r');
+                code[253] = toHex('u');
+                code[254] = toHex('e');
 
                 break;
             case "Block":
@@ -72,7 +75,7 @@ public class CodeGeneration {
                 System.out.println("DEBUG CodeGen - Writing [T" + tempX + "] into memory");
                 Temp = "T" + tempX;
                 code[position] = Temp;
-                Static s = new Static(Temp, "XX", n.name, currentScope, offSet);
+                Static s = new Static(Temp, "XX", n.children.get(1).name, currentScope, offSet, position);
                 staticData.add(s);
 
                 offSet++;
@@ -89,10 +92,32 @@ public class CodeGeneration {
                 code[position] = "A9";
                 position++;
 
-                // intialize to var val
-                System.out.println("DEBUG CodeGen - Writing [00] into memory");
-                code[position] = "0" + n.children.get(1);
-                position++;
+                if (isDigit(n.children.get(1).name)) {
+                    // intialize to var val
+                    System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + " 0] into memory");
+                    code[position] = "0" + n.children.get(1);
+                    position++;
+                }
+                else if (n.children.get(1).type == "string") {
+                    // check if string already exists in heap mem
+                    String str = n.children.get(1).name;
+                    int heapTemp;
+                    
+                    heapTemp = inHeap(heapMem, str);
+                    if (heapTemp != -1){
+                        code[position] = Integer.toHexString(heapTemp).toUpperCase();
+                        position++;
+                    }
+
+                    else {
+                        for (int i = 0; i < n.children.get(1).name.length(); i++) {
+                            code[heap] = toHex(str.charAt(i));
+                            heap--;
+                        }
+                    }
+                } else if () {
+
+                }
                 break;
             case "PrintStatement":
 
@@ -124,7 +149,7 @@ public class CodeGeneration {
                 case "AssignmentStatement":
                     break;
                 case "PrintStatement":
-                    switch (n.children.get(0).name){
+                    switch (n.children.get(0).name) {
                         case "d":
                         case "a":
                         case "w":
@@ -159,26 +184,56 @@ public class CodeGeneration {
         }
     }
 
-    public void backpatch(){
+    public void backpatch() {
 
     }
 
-    public static String toHex(String s){
-        char c = s.charAt(0);
-        int ascii = (int)c;
+    public static String toHex(char s) {
+
+        int ascii = (int) s;
+
         return Integer.toHexString(ascii).toUpperCase();
+    }
+
+    public static int inHeap(ArrayList<Heap> heap, String s) {
+        for (int i = 0; i < heap.size(); i++){
+            if (heap.get(i).t.equals(s))
+                return heap.get(i).i;
+        }
+        return -1;
     }
 }
 
 class Static{
-    public Static(String temp, String temp2, String varName, int scope, int offSet){
+    String t;
+    String t2;
+    String name;
+    int sc;
+    int oS;
+    int position;
 
+    public Static(String temp, String temp2, String varName, int scope, int offSet, int pos){
+        t = temp;
+        t2 = temp2;
+        name = varName;
+        sc = scope;
+        oS = offSet;
+        position = pos;
     }
 }
 
 class Jump{
     public Jump(int temp){
 
+    }
+}
+
+class Heap{
+    String t;
+    int i;
+    public Heap(String string, int index){
+        this.t = string;
+        this.i = index;
     }
 }
 

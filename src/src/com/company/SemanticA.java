@@ -8,6 +8,8 @@ package com.company;
 
 import java.util.ArrayList;
 
+import static com.company.CSTNode.setType;
+
 public class SemanticA {
     CST ast = new CST();
     int currentScope = -1;
@@ -107,6 +109,10 @@ public class SemanticA {
                             }
 
                             if (flag){
+
+                                setType(n.children.get(0), temp);
+                                setType(n.children.get(1), temp);
+
                                 System.out.println("VALID Semantic - Type check - ID [ " + n.children.get(0).name + " ] of type " + temp + " matches assignment type for [ " + n.children.get(1).name + " ] of type " + temp2);
                             }
                             else {
@@ -375,8 +381,6 @@ public class SemanticA {
 
                             // mark that the ID has been used
                             use(symbolTable.get(existence), n.children.get(0).name, n.children.get(0).lineNum, n.children.get(0).position);
-                            /*if (use(symbolTable.get(currentScope), n.children.get(0).name, n.children.get(0).lineNum, n.children.get(0).position)){
-                            }*/
 
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(existence), n.children.get(0).name)) {

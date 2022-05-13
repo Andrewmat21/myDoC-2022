@@ -22,6 +22,7 @@ import java.util.ArrayList;
     String name;
     int lineNum;
     int position;
+    String value = "";
 
     public CSTNode(){}
 
@@ -31,6 +32,7 @@ import java.util.ArrayList;
         this.type = tokenType;
         this.name = tokenName;
         this.parent = null;
+        this.value = "";
     }
 
     public CSTNode(String tokenType, String tokenName, int line, int pos) {
@@ -39,7 +41,23 @@ import java.util.ArrayList;
         this.lineNum = line;
         this.position = pos;
         this.parent = null;
+        this.value = "";
+
     }
+
+    public CSTNode(String tokenType, String tokenName, int line, int pos, String val) {
+        this.type = tokenType;
+        this.name = tokenName;
+        this.lineNum = line;
+        this.position = pos;
+        this.parent = null;
+        this.value = val;
+    }
+
+    public static void setType(CSTNode n, String type){
+        n.value = "val";
+    }
+
 }
 
     public class CST{
@@ -68,6 +86,20 @@ import java.util.ArrayList;
 
         public void addNode(String nodeType, String nTerm, int line, int pos){
             CSTNode node = new CSTNode(nodeType, nTerm, line, pos);
+            if (this.root == null){
+                this.root = node;
+                //node.parent = null;
+            }
+            else{
+                node.parent = this.current;
+                this.current.children.add(node);
+            }
+            if (nodeType != "leaf")
+                this.current = node;
+        }
+
+        public void addNode(String nodeType, String nTerm, int line, int pos, String primType){
+            CSTNode node = new CSTNode(nodeType, nTerm, line, pos, primType);
             if (this.root == null){
                 this.root = node;
                 //node.parent = null;
