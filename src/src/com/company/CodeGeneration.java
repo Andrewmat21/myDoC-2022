@@ -170,11 +170,13 @@ public class CodeGeneration {
                 break;
 
             case "PrintStatement":
-                System.out.println("DEBUG CodeGen - Writing [AC] into memory");
-                code[position] = "AC";
-                position++;
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Print Statement");
 
                 if (isId(n.children.get(0).name)){
+                    System.out.println("DEBUG CodeGen - Writing [AC] into memory");
+                    code[position] = "AC";
+                    position++;
+
                     temporaryStaticVar1 = checkStatic(staticData, n.children.get(0).name, currentScope, 1);
                     code[position] = temporaryStaticVar1;
                     position++;
@@ -188,8 +190,8 @@ public class CodeGeneration {
                 code[position] = "A2";
                 position++;
 
-                if (n.children.get(0).value.equals("string") || n.children.get(0).value.equals("boolean")){
-                    System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                if (n.children.get(0).value == ("string") || n.children.get(0).value == ("boolean")){
+                    System.out.println("DEBUG CodeGen - Writing [02] into memory");
                     code[position] = "02";
                     position++;
                 }
