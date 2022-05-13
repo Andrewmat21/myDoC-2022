@@ -91,21 +91,25 @@ public class CodeGeneration {
                 break;
 
             case "AssignmentStatement":
-                if(!isId(n.children.get(1).name)){
-                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
-                    code[position] = "A9";
-                    position++;
-                }
 
                 // codeGen for int assign
                 if (n.children.get(1).value.equals("Digit")) {
                     // intialize to var val
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+
                     System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + "] into memory");
                     code[position] = "0" + n.children.get(1).name;
                     position++;
                 }
                 // codeGen for string assign
                 else if (n.children.get(1).value == "string") {
+
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+
                     // check if string already exists in heap mem
                     String str = n.children.get(1).name;
                     int heapTemp;
@@ -128,6 +132,10 @@ public class CodeGeneration {
                 }
                 // codeGen for boolean assign
                 else if (n.children.get(1).value == "boolean") {
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+
                     if (n.children.get(1).name == "true")
                         code[position] = "FB";
                     else
@@ -415,6 +423,18 @@ public class CodeGeneration {
         position++;
 
         System.out.println("DEBUG CodeGen - Writing [" + st3 + "] into memory");
+        code[position] = st3;
+        position++;
+
+        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+        code[position] = "00";
+        position++;
+
+        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+        code[position] = "8D";
+        position++;
+
+        System.out.println("DEBUG CodeGen - Writing [00] into memory");
         code[position] = st3;
         position++;
 

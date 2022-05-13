@@ -137,6 +137,11 @@ public class SemanticA {
                 case "Addition":
                     // if the id exists...check for initialization
                     // check if var
+                    if (isDigit(n.children.get(0).name))
+                        setType(n.children.get(0), "Digit");
+                    if (isDigit(n.children.get(1).name))
+                        setType(n.children.get(1), "Digit");
+
                     if (isId(n.children.get(1).name)) {
                         //typeCheck(n.children.get(0).name);
                         existence = exists(symbolTable, n.children.get(1).name, currentScope);
@@ -145,7 +150,7 @@ public class SemanticA {
 
                             // mark that the ID has been used
                             use(symbolTable.get(existence), n.children.get(1).name, n.children.get(1).lineNum, n.children.get(1).position);
-                            
+
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(existence),n.children.get(1).name)) {
                                 warning++;
