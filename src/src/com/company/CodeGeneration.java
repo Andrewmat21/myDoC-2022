@@ -15,6 +15,9 @@ public class CodeGeneration {
     int offSet = 0;
     int heap = 243;
 
+    String temporaryStaticVar1;
+    String temporaryStaticVar2;
+
     ArrayList<Static> staticData = new ArrayList<Static>();
     ArrayList<Jump> jumpTable = new ArrayList<Jump>();
     ArrayList<Heap> heapMem = new ArrayList<Heap>();
@@ -88,12 +91,14 @@ public class CodeGeneration {
                 break;
 
             case "AssignmentStatement":
-                System.out.println("DEBUG CodeGen - Writing [A9] into memory");
-                code[position] = "A9";
-                position++;
+                if(!isId(n.children.get(1).name)){
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+                }
 
                 // codeGen for int assign
-                if (n.children.get(1).value == "int") {
+                if (n.children.get(1).value == "Digit") {
                     // intialize to var val
                     System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + "] into memory");
                     code[position] = "0" + n.children.get(1).name;
@@ -129,6 +134,21 @@ public class CodeGeneration {
                         code[position] = "F5";
                     position++;
                 }
+                else if (isId(n.children.get(1).name)){
+                    //id
+                    //{int a a = 3 int b b = 4 a = b}$
+                    System.out.println("DEBUG CodeGen - Writing [AD] into memory");
+                    code[position] = "AD";
+                    position++;
+
+                    String temporaryStaticVar1 = checkStatic(staticData, n.children.get(1).name, currentScope, 1);
+                    code[position] = temporaryStaticVar1;
+                    position++;
+
+                    String temporaryStaticVar2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
+                    code[position] = temporaryStaticVar2;
+                    position++;
+                }
 
                 code[position] = "8D";
                 position++;
@@ -142,15 +162,46 @@ public class CodeGeneration {
                 code[position] = temporaryStaticVar2;
                 position++;
 
-
-
                 //addition
-                //id
+
                 //inequ
+
                 //eq
                 break;
 
             case "PrintStatement":
+                System.out.println("DEBUG CodeGen - Writing [AC] into memory");
+                code[position] = "AC";
+                position++;
+
+                if (isId(n.children.get(0).name)){
+                    temporaryStaticVar1 = checkStatic(staticData, n.children.get(0).name, currentScope, 1);
+                    code[position] = temporaryStaticVar1;
+                    position++;
+
+                    temporaryStaticVar2 = checkStatic(staticData, n.children.get(0).name, currentScope, 2);
+                    code[position] = temporaryStaticVar2;
+                    position++;
+                }
+
+                System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                code[position] = "A2";
+                position++;
+
+                if (n.children.get(0).value.equals("string") || n.children.get(0).value.equals("boolean")){
+                    System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                    code[position] = "02";
+                    position++;
+                }
+                else {
+                    System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                    code[position] = "01";
+                    position++;
+                }
+
+                System.out.println("DEBUG CodeGen - Writing [FF] into memory");
+                code[position] = "FF";
+                position++;
 
                 break;
             case "Addition":
@@ -205,7 +256,7 @@ public class CodeGeneration {
         System.out.println();
         for (int i = 0; i < code.length; i++) {
 
-            if (j < 8) {
+            if (j < 7) {
                 System.out.print(code[i] + " ");
                 j++;
             } else {

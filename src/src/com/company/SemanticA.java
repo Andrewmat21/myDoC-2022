@@ -111,7 +111,10 @@ public class SemanticA {
                             if (flag){
 
                                 setType(n.children.get(0), temp);
-                                setType(n.children.get(1), temp);
+                                if (isDigit(n.children.get(1).name))
+                                    setType(n.children.get(1), "Digit");
+                                else
+                                    setType(n.children.get(1), temp);
 
                                 System.out.println("VALID Semantic - Type check - ID [ " + n.children.get(0).name + " ] of type " + temp + " matches assignment type for [ " + n.children.get(1).name + " ] of type " + temp2);
                             }
@@ -388,7 +391,7 @@ public class SemanticA {
                                 System.out.println("DEBUG Semantic - WARNING: ID [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ") is used but was never initialized");
                             }
                         }
-
+//{int a a =1 print(1+a)}$
                         else {
 
                             // log for undeclared variable
@@ -398,9 +401,7 @@ public class SemanticA {
                             break;
                         }
                     }
-                    else {
 
-                    }
                     break;
             }
         }
