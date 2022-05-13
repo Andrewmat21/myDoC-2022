@@ -145,9 +145,7 @@ public class SemanticA {
 
                             // mark that the ID has been used
                             use(symbolTable.get(existence), n.children.get(1).name, n.children.get(1).lineNum, n.children.get(1).position);
-                            /*if (use(symbolTable.get(currentScope), n.children.get(1).name)){
-                                System.out.println("at (" + n.children.get(1).lineNum + ":" + n.children.get(1).position + ")");
-                            }*/
+                            
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(existence),n.children.get(1).name)) {
                                 warning++;
