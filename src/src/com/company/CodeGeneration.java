@@ -31,7 +31,7 @@ public class CodeGeneration {
 
         switch (n.name) {
             case "Program":
-                //store false
+                //store false at
                 System.out.println("DEBUG CodeGen - Writing [false] into heap memory");
                 code[245] = toHex('f');
                 code[246] = toHex('a');
@@ -39,7 +39,7 @@ public class CodeGeneration {
                 code[248] = toHex('s');
                 code[249] = toHex('e');
 
-                //store true
+                //store true at
                 System.out.println("DEBUG CodeGen - Writing [true] into heap memory");
                 code[251] = toHex('t');
                 code[252] = toHex('r');
@@ -92,17 +92,17 @@ public class CodeGeneration {
                 code[position] = "A9";
                 position++;
 
-                if (isDigit(n.children.get(1).name)) {
+                if (n.children.get(1).value == "int") {
                     // intialize to var val
-                    System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + " 0] into memory");
-                    code[position] = "0" + n.children.get(1);
+                    System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + "] into memory");
+                    code[position] = "0" + n.children.get(1).name;
                     position++;
                 }
-                else if (n.children.get(1).type == "string") {
+                else if (n.children.get(1).value == "string") {
                     // check if string already exists in heap mem
                     String str = n.children.get(1).name;
                     int heapTemp;
-                    
+
                     heapTemp = inHeap(heapMem, str);
                     if (heapTemp != -1){
                         code[position] = Integer.toHexString(heapTemp).toUpperCase();
@@ -110,14 +110,33 @@ public class CodeGeneration {
                     }
 
                     else {
-                        for (int i = 0; i < n.children.get(1).name.length(); i++) {
+                        for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
                             code[heap] = toHex(str.charAt(i));
                             heap--;
                         }
                     }
-                } else if () {
 
                 }
+                else if (n.children.get(1).value == "boolean") {
+                    if (n.children.get(1).name == "true")
+                        code[position] = "FB";
+                    else
+                        code[position] = "F5";
+                    position++;
+                }
+
+                code[position] = "8D";
+                position++;
+
+                String temporaryStaticVar1 = checkStatic(staticData, n.children.get(0).name, currentScope, 1);
+                code[position] = temporaryStaticVar1;
+                position++;
+
+                String temporaryStaticVar2 = checkStatic(staticData, n.children.get(0).name, currentScope, 2);
+                code[position] = temporaryStaticVar2;
+                position++;
+
+
                 break;
             case "PrintStatement":
 
@@ -202,6 +221,43 @@ public class CodeGeneration {
         }
         return -1;
     }
+
+    public static String checkStatic(ArrayList<Static> table, String var, int scope, int num){
+        for (int i = 0; i < table.size(); i++){
+            if (table.get(i).name.equals(var) && table.get(i).sc == scope) {
+
+                if (num == 1) {
+                    String dataTemp = table.get(i).t;
+                    return dataTemp;
+                } else if (num == 2) {
+                    String dataTemp = table.get(i).t2;
+                    return dataTemp;
+                }
+            }
+            else if (table.get(i).name.equals(var) && table.get(i).sc >= scope){
+                if (num == 1){
+                    String dataTemp = table.get(i).t;
+                    return dataTemp;
+                }
+                else if (num == 2){
+                    String dataTemp = table.get(i).t2;
+                    return dataTemp;
+                }
+            }
+        }
+        return "null";
+    }
+
+    /*public static int existsStatic(ArrayList<Static> table, String id, int scopeNum){
+        for (int i = scopeNum; i >= 0; i--){
+            for (int j = 0; j < table.get(i).size(); j++){
+                if (table.get(i).get(j).value.equals(id)){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }*/
 }
 
 class Static{

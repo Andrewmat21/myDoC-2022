@@ -55,7 +55,7 @@ import java.util.ArrayList;
     }
 
     public static void setType(CSTNode n, String type){
-        n.value = "val";
+        n.value = type;
     }
 
 }
