@@ -53,11 +53,8 @@ public class CodeGeneration {
             case "Block":
                 // enter new scope
                 currentScope++;
-                System.out.println("DEBUG CodeGen - Generating Block on line " + n.lineNum);
+                //System.out.println("DEBUG CodeGen - Generating Block on line " + n.lineNum);
                 System.out.println("DEBUG CodeGen - Entering Scope " + currentScope);
-                break;
-
-            case "VarDecl":
                 // add opcodes for new var
                 // load accumulator
                 System.out.println("DEBUG CodeGen - Writing [A9] into memory");
@@ -68,6 +65,9 @@ public class CodeGeneration {
                 System.out.println("DEBUG CodeGen - Writing [00] into memory");
                 code[position] = "00";
                 position++;
+                break;
+
+            case "VarDecl":
 
                 // store accumulator contents in memory
                 System.out.println("DEBUG CodeGen - Writing [8D] into memory");
@@ -170,8 +170,9 @@ public class CodeGeneration {
                 break;
 
             case "PrintStatement":
-                System.out.println("DEBUG CodeGen - Generating Op Codes for Print Statement");
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Printing a(n) " + n.children.get(0).name);
 
+                // print id
                 if (isId(n.children.get(0).name)){
                     System.out.println("DEBUG CodeGen - Writing [AC] into memory");
                     code[position] = "AC";
@@ -186,6 +187,35 @@ public class CodeGeneration {
                     position++;
                 }
 
+                // print digit
+                else if (isDigit(n.children.get(0).name)){
+                    System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                    code[position] = "A0";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(0).name + "] into memory");
+                    code[position] = "0" + n.children.get(0).name;
+                    position++;
+                }
+
+                else if (n.children.get(0).name == "Addition"){
+
+                }
+
+                else if (n.children.get(0).value == "boolean"){
+
+                    System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                    code[position] = "A0";
+                    position++;
+
+                    if (n.children.get(0).name == "true")
+                        code[position] = "FB";
+                    else
+                        code[position] = "F5";
+                    position++;
+
+                }
+
                 System.out.println("DEBUG CodeGen - Writing [A2] into memory");
                 code[position] = "A2";
                 position++;
@@ -196,6 +226,7 @@ public class CodeGeneration {
                     position++;
                 }
                 else {
+                    //System.out.println(n.children.get(0).value);
                     System.out.println("DEBUG CodeGen - Writing [01] into memory");
                     code[position] = "01";
                     position++;
@@ -288,9 +319,8 @@ public class CodeGeneration {
     }
 
     public static String checkStatic(ArrayList<Static> table, String var, int scope, int num){
-        for (int i = 0; i < table.size(); i++){
+        for (int i = 0; i < table.size(); i++) {
             if (table.get(i).name.equals(var) && table.get(i).sc == scope) {
-
                 if (num == 1) {
                     String dataTemp = table.get(i).t;
                     return dataTemp;
@@ -299,17 +329,20 @@ public class CodeGeneration {
                     return dataTemp;
                 }
             }
-            else if (table.get(i).name.equals(var) && table.get(i).sc <= scope){
-                if (num == 1){
+        }
+
+        for (int i = 0; i < table.size(); i++) {
+            if (table.get(i).name.equals(var) && table.get(i).sc <= scope) {
+                if (num == 1) {
                     String dataTemp = table.get(i).t;
                     return dataTemp;
-                }
-                else if (num == 2){
+                } else if (num == 2) {
                     String dataTemp = table.get(i).t2;
                     return dataTemp;
                 }
             }
         }
+
         return "null";
     }
 

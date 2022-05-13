@@ -320,8 +320,8 @@ public class SemanticA {
                     // if var does exists, add to symbol table
                     if (!existsInScope(symbolTable, n.children.get(1).name, currentScope)) {
                         symbolTable.get(currentScope).add(new Scope(currentScope, n.children.get(0).name, n.children.get(1).name, n.children.get(1).lineNum, n.children.get(1).position ,false, false));
-
                         logVarDecl(n.children.get(1).name, n.children.get(0).lineNum, n.children.get(0).position, n.children.get(0).name);
+                        setType(n.children.get(1), n.children.get(0).name);
                     }
                     else {
                         // if already exists throw error
@@ -384,6 +384,8 @@ public class SemanticA {
 
                             // mark that the ID has been used
                             use(symbolTable.get(existence), n.children.get(0).name, n.children.get(0).lineNum, n.children.get(0).position);
+
+                            setType(n.children.get(0), getType(symbolTable.get(existence), n.children.get(0).name));
 
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(existence), n.children.get(0).name)) {
