@@ -92,23 +92,27 @@ public class CodeGeneration {
                 code[position] = "A9";
                 position++;
 
+                // codeGen for int assign
                 if (n.children.get(1).value == "int") {
                     // intialize to var val
                     System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + "] into memory");
                     code[position] = "0" + n.children.get(1).name;
                     position++;
                 }
+                // codeGen for string assign
                 else if (n.children.get(1).value == "string") {
                     // check if string already exists in heap mem
                     String str = n.children.get(1).name;
                     int heapTemp;
 
+                    //check if string is already in heap memory
                     heapTemp = inHeap(heapMem, str);
                     if (heapTemp != -1){
                         code[position] = Integer.toHexString(heapTemp).toUpperCase();
                         position++;
                     }
 
+                    //reuse heap pointer if already exists
                     else {
                         for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
                             code[heap] = toHex(str.charAt(i));
@@ -117,6 +121,7 @@ public class CodeGeneration {
                     }
 
                 }
+                // codeGen for boolean assign
                 else if (n.children.get(1).value == "boolean") {
                     if (n.children.get(1).name == "true")
                         code[position] = "FB";
@@ -128,6 +133,7 @@ public class CodeGeneration {
                 code[position] = "8D";
                 position++;
 
+                // store the Temp into 2 parts
                 String temporaryStaticVar1 = checkStatic(staticData, n.children.get(0).name, currentScope, 1);
                 code[position] = temporaryStaticVar1;
                 position++;
@@ -137,7 +143,13 @@ public class CodeGeneration {
                 position++;
 
 
+
+                //addition
+                //id
+                //inequ
+                //eq
                 break;
+
             case "PrintStatement":
 
                 break;
@@ -234,7 +246,7 @@ public class CodeGeneration {
                     return dataTemp;
                 }
             }
-            else if (table.get(i).name.equals(var) && table.get(i).sc >= scope){
+            else if (table.get(i).name.equals(var) && table.get(i).sc <= scope){
                 if (num == 1){
                     String dataTemp = table.get(i).t;
                     return dataTemp;
