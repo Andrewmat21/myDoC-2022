@@ -68,7 +68,7 @@ public class CodeGeneration {
                 break;
 
             case "VarDecl":
-
+                /*
                 // store accumulator contents in memory
                 System.out.println("DEBUG CodeGen - Writing [8D] into memory");
                 code[position] = "8D";
@@ -87,11 +87,11 @@ public class CodeGeneration {
 
                 System.out.println("DEBUG CodeGen - Writing [XX] into memory");
                 code[position] = "XX";
-                position++;
+                position++;*/
                 break;
 
             case "AssignmentStatement":
-
+                /*
                 // codeGen for int assign
                 if (n.children.get(1).value.equals("Digit")) {
                     // intialize to var val
@@ -128,8 +128,8 @@ public class CodeGeneration {
                             heap--;
                         }
                     }
-
                 }
+
                 // codeGen for boolean assign
                 else if (n.children.get(1).value == "boolean") {
                     System.out.println("DEBUG CodeGen - Writing [A9] into memory");
@@ -145,7 +145,6 @@ public class CodeGeneration {
                 else if (n.children.get(1).name.equals("Addition")){
                     genAddition(staticData, code, position, n.children.get(1), currentScope);
                 }
-                    //id
                     //{int a a = 3 int b b = 4 a = b}$
                 else if (isId(n.children.get(1).name)) {
 
@@ -178,10 +177,11 @@ public class CodeGeneration {
 
                 //inequ
 
-                //eq
+                //eq*/
                 break;
 
             case "PrintStatement":
+                /*
                 System.out.println("DEBUG CodeGen - Generating Op Codes for Printing a(n) " + n.children.get(0).name);
 
                 // print id
@@ -247,10 +247,11 @@ public class CodeGeneration {
                 System.out.println("DEBUG CodeGen - Writing [FF] into memory");
                 code[position] = "FF";
                 position++;
-
+                */
                 break;
             case "Addition":
-                genAddition(staticData, code, position, n, currentScope);
+                /*
+                genAddition(staticData, code, position, n, currentScope);*/
                 break;
             case "Equality":
                 break;
@@ -272,20 +273,190 @@ public class CodeGeneration {
                     currentScope--;
                     break;
                 case "VarDecl":
-                    //isId()
+
+                    // store accumulator contents in memory
+                    System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+                    code[position] = "8D";
+                    position++;
+
+                    // add static data
+                    System.out.println("DEBUG CodeGen - Writing [T" + tempX + "] into memory");
+                    Temp = "T" + tempX;
+                    code[position] = Temp;
+                    Static s = new Static(Temp, "XX", n.children.get(1).name, currentScope, offSet, position);
+                    staticData.add(s);
+
+                    offSet++;
+                    tempX++;
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [XX] into memory");
+                    code[position] = "XX";
+                    position++;
                     break;
+
                 case "AssignmentStatement":
-                    break;
-                case "PrintStatement":
-                    switch (n.children.get(0).name) {
-                        case "d":
-                        case "a":
-                        case "w":
-                        case "s":
-                        case "b":
+
+                    // codeGen for int assign
+                    if (n.children.get(1).value.equals("Digit")) {
+                        // intialize to var val
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + "] into memory");
+                        code[position] = "0" + n.children.get(1).name;
+                        position++;
                     }
+                    // codeGen for string assign
+                    else if (n.children.get(1).value == "string") {
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        // check if string already exists in heap mem
+                        String str = n.children.get(1).name;
+                        int heapTemp;
+
+                        //check if string is already in heap memory
+                        heapTemp = inHeap(heapMem, str);
+                        if (heapTemp != -1){
+                            code[position] = Integer.toHexString(heapTemp).toUpperCase();
+                            position++;
+                        }
+
+                        //reuse heap pointer if already exists
+                        else {
+                            for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
+                                code[heap] = toHex(str.charAt(i));
+                                heap--;
+                            }
+                        }
+                    }
+
+                    // codeGen for boolean assign
+                    else if (n.children.get(1).value == "boolean") {
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        if (n.children.get(1).name == "true")
+                            code[position] = "FB";
+                        else
+                            code[position] = "F5";
+                        position++;
+                    }
+                    else if (n.children.get(1).name.equals("Addition")){
+                        this.genAddition(/*staticData, code, position, */n.children.get(1), currentScope);
+                    }
+                    //{int a a = 3 int b b = 4 a = b}$
+                    else if (isId(n.children.get(1).name)) {
+
+                        System.out.println("DEBUG CodeGen - Writing [AD] into memory");
+                        code[position] = "AD";
+                        position++;
+
+                        temporaryStaticVar1 = checkStatic(staticData, n.children.get(1).name, currentScope, 1);
+                        code[position] = temporaryStaticVar1;
+                        position++;
+
+                        temporaryStaticVar2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
+                        code[position] = temporaryStaticVar2;
+                        position++;
+                    }
+
+                    code[position] = "8D";
+                    position++;
+
+                    // store the Temp into 2 parts
+                    temporaryStaticVar1 = checkStatic(staticData, n.children.get(0).name, currentScope, 1);
+                    code[position] = temporaryStaticVar1;
+                    position++;
+
+                    temporaryStaticVar2 = checkStatic(staticData, n.children.get(0).name, currentScope, 2);
+                    code[position] = temporaryStaticVar2;
+                    position++;
+
+                    //addition
+
+                    //inequ
+
+                    //eq
+                    break;
+
+                case "PrintStatement":
+                    System.out.println("DEBUG CodeGen - Generating Op Codes for Printing a(n) " + n.children.get(0).name);
+
+                    // print id
+                    if (isId(n.children.get(0).name)){
+                        System.out.println("DEBUG CodeGen - Writing [AC] into memory");
+                        code[position] = "AC";
+                        position++;
+
+                        temporaryStaticVar1 = checkStatic(staticData, n.children.get(0).name, currentScope, 1);
+                        code[position] = temporaryStaticVar1;
+                        position++;
+
+                        temporaryStaticVar2 = checkStatic(staticData, n.children.get(0).name, currentScope, 2);
+                        code[position] = temporaryStaticVar2;
+                        position++;
+                    }
+
+                    // print digit
+                    else if (isDigit(n.children.get(0).name)){
+                        System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(0).name + "] into memory");
+                        code[position] = "0" + n.children.get(0).name;
+                        position++;
+                    }
+
+                    else if (n.children.get(0).name == "Addition"){
+
+
+                        this.genAddition(/*staticData, code, position, */n.children.get(0), currentScope);
+                    }
+
+                    else if (n.children.get(0).value == "boolean"){
+
+                        System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        if (n.children.get(0).name == "true")
+                            code[position] = "FB";
+                        else
+                            code[position] = "F5";
+                        position++;
+
+                    }
+
+                    System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                    code[position] = "A2";
+                    position++;
+
+                    if (n.children.get(0).value == ("string") || n.children.get(0).value == ("boolean")){
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+                    }
+                    else {
+
+                        System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                        code[position] = "01";
+                        position++;
+                    }
+
+                    System.out.println("DEBUG CodeGen - Writing [FF] into memory");
+                    code[position] = "FF";
+                    position++;
+
                     break;
                 case "Addition":
+                    genAddition(/*staticData, code, position, */n, currentScope);
                     break;
                 case "Equality":
                     break;
@@ -359,7 +530,7 @@ public class CodeGeneration {
         return "null";
     }
 
-    public static void genAddition(ArrayList<Static> s, String code[], int position, CSTNode n, int currentScope){
+    public void genAddition(CSTNode n, int currentScope){
         String st1;
         String st2;
         String st3 = "00";
@@ -376,6 +547,14 @@ public class CodeGeneration {
             System.out.println("DEBUG CodeGen - Writing [A9] into memory");
             code[position] = "8D";
             position++;
+
+            System.out.println("DEBUG CodeGen - Writing [" + st3 + "] into memory");
+            code[position] = st3;
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [00] into memory");
+            code[position] = "00";
+            position++;
         }
 
         else if (isId(n.children.get(1).name)){
@@ -383,11 +562,11 @@ public class CodeGeneration {
             code[position] = "AD";
             position++;
 
-            st1 = checkStatic(s, n.children.get(1).name, currentScope, 1);
+            st1 = checkStatic(staticData, n.children.get(1).name, currentScope, 1);
             code[position] = st1;
             position++;
 
-            st2 = checkStatic(s, n.children.get(1).name, currentScope, 2);
+            st2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
             code[position] = st2;
             position++;
 
@@ -405,7 +584,7 @@ public class CodeGeneration {
         }
 
         else if (n.children.get(1).name.equals("Addition")){
-            genAddition(s, code, position, n.children.get(1), currentScope);
+            genAddition(n.children.get(1), currentScope);
         }
 
         if (isDigit(n.children.get(0).name)){
@@ -443,17 +622,7 @@ public class CodeGeneration {
         position++;
 
     }
-
-    /*public static int existsStatic(ArrayList<Static> table, String id, int scopeNum){
-        for (int i = scopeNum; i >= 0; i--){
-            for (int j = 0; j < table.get(i).size(); j++){
-                if (table.get(i).get(j).value.equals(id)){
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }*/
+    
 }
 
 class Static{
