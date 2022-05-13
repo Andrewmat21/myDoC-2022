@@ -347,10 +347,11 @@ public class CodeGeneration {
                             code[position] = "F5";
                         position++;
                     }
+                    // addition
                     else if (n.children.get(1).name.equals("Addition")){
-                        this.genAddition(/*staticData, code, position, */n.children.get(1), currentScope);
+                        this.genAddition(n.children.get(1), currentScope);
                     }
-                    //{int a a = 3 int b b = 4 a = b}$
+
                     else if (isId(n.children.get(1).name)) {
 
                         System.out.println("DEBUG CodeGen - Writing [AD] into memory");
@@ -366,6 +367,10 @@ public class CodeGeneration {
                         position++;
                     }
 
+                    else if (n.children.get(1).name.equals("Addition")){
+
+                    }
+
                     code[position] = "8D";
                     position++;
 
@@ -377,8 +382,6 @@ public class CodeGeneration {
                     temporaryStaticVar2 = checkStatic(staticData, n.children.get(0).name, currentScope, 2);
                     code[position] = temporaryStaticVar2;
                     position++;
-
-                    //addition
 
                     //inequ
 
