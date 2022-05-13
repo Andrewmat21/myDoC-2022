@@ -456,7 +456,7 @@ public class CodeGeneration {
 
                     break;
                 case "Addition":
-                    genAddition(/*staticData, code, position, */n, currentScope);
+                    //genAddition(/*staticData, code, position, */n, currentScope);
                     break;
                 case "Equality":
                     break;
@@ -622,7 +622,7 @@ public class CodeGeneration {
         position++;
 
     }
-    
+
 }
 
 class Static{
