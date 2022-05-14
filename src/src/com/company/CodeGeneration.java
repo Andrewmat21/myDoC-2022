@@ -68,6 +68,7 @@ public class CodeGeneration {
                 break;
 
             case "VarDecl":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for VarDecl");
                 /*
                 // store accumulator contents in memory
                 System.out.println("DEBUG CodeGen - Writing [8D] into memory");
@@ -91,6 +92,7 @@ public class CodeGeneration {
                 break;
 
             case "AssignmentStatement":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Assignment");
                 /*
                 // codeGen for int assign
                 if (n.children.get(1).value.equals("Digit")) {
@@ -181,6 +183,7 @@ public class CodeGeneration {
                 break;
 
             case "PrintStatement":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Print");
                 /*
                 System.out.println("DEBUG CodeGen - Generating Op Codes for Printing a(n) " + n.children.get(0).name);
 
@@ -250,14 +253,21 @@ public class CodeGeneration {
                 */
                 break;
             case "Addition":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Addition");
                 /*
                 genAddition(staticData, code, position, n, currentScope);*/
                 break;
             case "Equality":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Comparison");
                 break;
             case "Inequality":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for Comparison");
                 break;
             case "WhileStatement":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for While Loop");
+                break;
+            case "IfStatement":
+                System.out.println("DEBUG CodeGen - Generating Op Codes for If Statement");
                 break;
         }
 
@@ -296,7 +306,6 @@ public class CodeGeneration {
                     break;
 
                 case "AssignmentStatement":
-
                     // codeGen for int assign
                     if (n.children.get(1).value.equals("Digit")) {
                         // intialize to var val
@@ -693,6 +702,60 @@ public class CodeGeneration {
         code[position] = "00";
         position++;
 
+    }
+
+    public void genEq(CSTNode n, int currentScope){
+        String st1;
+        String st2;
+        String st3 = "00";
+
+        if (isDigit(n.children.get(0).name)){
+            System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+            code[position] = "A2";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(0).name + "] into memory");
+            code[position] = "0" + n.children.get(0).name;
+            position++;
+        }
+
+        else if (isId(n.children.get(0).name)){
+            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+            code[position] = "AE";
+            position++;
+
+            st1 = checkStatic(staticData, n.children.get(1).name, currentScope, 1);
+            code[position] = st1;
+            position++;
+
+            st2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
+            code[position] = st2;
+            position++;
+        }
+
+        else if (n.children.get(0).name == "Addition"){
+            this.genAddition(n.children.get(0), currentScope);
+
+            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+            code[position] = "AE";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [" + st3 + "] into memory");
+            code[position] = st3;
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+            code[position] = "00";
+            position++;
+        }
+
+        else if (isDigit(n.children.get(0).name)){
+
+        }
+
+        else if (isDigit(n.children.get(0).name)){
+
+        }
     }
 
 }
