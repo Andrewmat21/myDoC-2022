@@ -892,7 +892,12 @@ public class CodeGeneration {
     }
 
     public void backpatch() {
-
+        for (int i = 0; i < code.length; i++){
+            if (code[i].charAt(0) == 'T'){
+                String t = code[i];
+                String add = Integer.toHexString(position).toUpperCase();
+            }
+        }
     }
 
     public static String toHex(char s) {
@@ -1237,6 +1242,7 @@ class Static{
     String t;
     String t2;
     String name;
+    String newPos;
     int sc;
     int oS;
     int position;
@@ -1248,6 +1254,7 @@ class Static{
         sc = scope;
         oS = offSet;
         position = pos;
+        newPos = "00";
     }
 }
 
