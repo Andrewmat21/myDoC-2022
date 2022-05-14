@@ -63,8 +63,8 @@ public class Parser {
                 System.out.println("INFO  Generating Code for program " + progNum + "...");
                 CodeGeneration cg = new CodeGeneration();
                 cg.generate(ast.root, progNum);
+                cg.backpatch();
                 cg.logCode();
-
             }
 
             // else don't

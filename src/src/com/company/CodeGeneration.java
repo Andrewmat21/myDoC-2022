@@ -869,6 +869,122 @@ public class CodeGeneration {
                 case "Inequality":
                     break;
                 case "WhileStatement":
+                    int start = position;
+                    if (n.children.get(0).value.equals("boolean")) {
+                        if (n.children.get(0).name.equals("true")) {
+                            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+                            code[position] = "AE";
+                            position++;
+
+                            System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                            code[position] = "FB";
+                            position++;
+
+                            System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                            code[position] = "00";
+                            position++;
+                        }
+                        // false
+                        else {
+                            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+                            code[position] = "AE";
+                            position++;
+
+                            System.out.println("DEBUG CodeGen - Writing [F5] into memory");
+                            code[position] = "F5";
+                            position++;
+
+                            System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                            code[position] = "00";
+                            position++;
+                        }
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "FB";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+                    }
+
+                    else if (n.children.get(0).name.equals("Equality")){
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                        code[position] = "01";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "8D";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "EC";
+                        position++;
+
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "00";
+                        position++;
+
+                    }
                     break;
                 case "IfStatement":
                     break;
@@ -877,6 +993,7 @@ public class CodeGeneration {
     }
 
     public void logCode() {
+
         int j = 0;
         System.out.println();
         for (int i = 0; i < code.length; i++) {
@@ -902,13 +1019,15 @@ public class CodeGeneration {
         for (int i = 0; i < staticData.size(); i++){
             for (int j = 0; j < code.length; j++){
                 if (staticData.get(i).t.equals(code[j])){
-                    if (staticData.get(i).t.equals(code[j+1])) {
-                        code[i] = "00";
-                        code[i + 1] = "00";
+                    if (staticData.get(i).t2.equals(code[j+1])) {
+                        code[j] = staticData.get(i).newPos;
+                        code[j + 1] = "00";
                     }
                 }
             }
         }
+
+
     }
 
     public static String toHex(char s) {
