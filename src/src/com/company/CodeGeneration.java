@@ -14,6 +14,8 @@ public class CodeGeneration {
     String Temp;
     int offSet = 0;
     int heap = 243;
+    int error = 0;
+
 
     String temporaryStaticVar1;
     String temporaryStaticVar2;
@@ -359,7 +361,8 @@ public class CodeGeneration {
                     // addition
                     else if (n.children.get(1).name.equals("Addition")) {
                         this.genAddition(n.children.get(1), currentScope);
-                    } else if (isId(n.children.get(1).name)) {
+                    }
+                    else if (isId(n.children.get(1).name)) {
 
                         System.out.println("DEBUG CodeGen - Writing [AD] into memory");
                         code[position] = "AD";
@@ -372,9 +375,100 @@ public class CodeGeneration {
                         temporaryStaticVar2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
                         code[position] = temporaryStaticVar2;
                         position++;
-                    } else if (n.children.get(1).name.equals("Addition")) {
+                    }
+                    else if (n.children.get(1).name.equals("Equality")) {
+                        this.genEq(n.children.get(1), currentScope);
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [F5] into memory");
+                        code[position] = "F5";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "FB";
+                        position++;
+                    }
+
+                    else if (n.children.get(1).name.equals("Inequality")) {
+                        this.genEq(n.children.get(1), currentScope);
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                        code[position] = "01";
+                        position++;
+
+
+                        System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
 
                     }
+
 
                     code[position] = "8D";
                     position++;
@@ -447,7 +541,7 @@ public class CodeGeneration {
                         position++;
                     }
 
-                    else if (n.children.get(0).name == "Addition") {
+                    else if (n.children.get(0).name.equals("Addition")) {
                         this.genAddition(n.children.get(0), currentScope);
 
                         System.out.println("DEBUG CodeGen - Writing [A2] into memory");
@@ -471,7 +565,7 @@ public class CodeGeneration {
                         position++;
                     }
 
-                    else if (n.children.get(0).value == "string") {
+                    else if (n.children.get(0).value.equals("string")) {
 
                         System.out.println("DEBUG CodeGen - Writing [A0] into memory");
                         code[position] = "A0";
@@ -510,7 +604,7 @@ public class CodeGeneration {
                         position++;
                     }
 
-                    else if (n.children.get(0).value == "boolean"){
+                    else if (n.children.get(0).value.equals("boolean")){
 
                         System.out.println("DEBUG CodeGen - Writing [A0] into memory");
                         code[position] = "A0";
@@ -531,6 +625,185 @@ public class CodeGeneration {
                         position++;
                     }
 
+                    else if (n.children.get(0).value.equals("Equality")) {
+                        this.genEq(n.children.get(0), currentScope);
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [0A] into memory");
+                        code[position] = "0A";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [AO] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "FB";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+                        code[position] = "AE";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FF] into memory");
+                        code[position] = "FF";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [FE] into memory");
+                        code[position] = "FE";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        // load false
+                        System.out.println("DEBUG CodeGen - Writing [F5] into memory");
+                        code[position] = "F5";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+
+                    }
+
+                    else if (n.children.get(0).value.equals("Inequality")) {
+                        this.genEq(n.children.get(0), currentScope);
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [0A] into memory");
+                        code[position] = "0A";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [AO] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        //load false
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "F5";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+                        code[position] = "AE";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FF] into memory");
+                        code[position] = "FF";
+                        position++;
+
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [FE] into memory");
+                        code[position] = "FE";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [A0] into memory");
+                        code[position] = "A0";
+                        position++;
+
+                        //load true
+                        System.out.println("DEBUG CodeGen - Writing [FF] into memory");
+                        code[position] = "FB";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "02";
+                        position++;
+                    }
+
                     System.out.println("DEBUG CodeGen - Writing [FF] into memory");
                     code[position] = "FF";
                     position++;
@@ -544,6 +817,8 @@ public class CodeGeneration {
                 case "Inequality":
                     break;
                 case "WhileStatement":
+                    break;
+                case "IfStatement":
                     break;
             }
         }
@@ -704,7 +979,7 @@ public class CodeGeneration {
 
     }
 
-    public void genEq(CSTNode n, int currentScope){
+    public void genEq(CSTNode n, int currentScope) {
         String st1;
         String st2;
         String st3 = "00";
@@ -717,6 +992,35 @@ public class CodeGeneration {
             System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(0).name + "] into memory");
             code[position] = "0" + n.children.get(0).name;
             position++;
+        }
+
+        else if (n.children.get(0).value.equals("string")) {
+            System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+            code[position] = "A2";
+            position++;
+
+            String str = n.children.get(1).name;
+            int heapTemp;
+
+            //check if string is already in heap memory
+            //reuse heap pointer if already exists
+            heapTemp = inHeap(heapMem, str);
+            if (heapTemp != -1) {
+                System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heapTemp).toUpperCase() + "] into memory");
+                code[position] = Integer.toHexString(heapTemp).toUpperCase();
+                position++;
+            }
+
+            //store new string in heap
+            else {
+                for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
+                    code[heap] = toHex(str.charAt(i));
+                    heap--;
+                }
+                System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heap+1).toUpperCase() + "] into memory");
+                code[position] = Integer.toHexString(heap+1).toUpperCase();
+                position++;
+            }
         }
 
         else if (isId(n.children.get(0).name)){
@@ -749,13 +1053,130 @@ public class CodeGeneration {
             position++;
         }
 
-        else if (isDigit(n.children.get(0).name)){
+        else if (n.children.get(0).value.equals("boolean")){
+            System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+            code[position] = "A2";
+            position++;
+
+            if (n.children.get(0).name == "true")
+                code[position] = "FB";
+            else
+                code[position] = "F5";
+            position++;
+        }
+
+        // check second node
+        if (isDigit(n.children.get(1).name)){
+            System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+            code[position] = "A9";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [0" + n.children.get(1).name + "] into memory");
+            code[position] = "0" + n.children.get(1).name;
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+            code[position] = "8D";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [" + st3 + "] into memory");
+            code[position] = st3;
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [00] into memory");
+            code[position] = "00";
+            position++;
+        }
+
+        else if (n.children.get(1).value.equals("string"))
+        {
+            System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+            code[position] = "A9";
+            position++;
+
+            String str = n.children.get(1).name;
+            int heapTemp;
+
+            //check if string is already in heap memory
+            //reuse heap pointer if already exists
+            heapTemp = inHeap(heapMem, str);
+            if (heapTemp != -1) {
+                System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heapTemp).toUpperCase() + "] into memory");
+                code[position] = Integer.toHexString(heapTemp).toUpperCase();
+                position++;
+            }
+
+            //store new string in heap
+            else {
+                for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
+                    code[heap] = toHex(str.charAt(i));
+                    heap--;
+                }
+                System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heap+1).toUpperCase() + "] into memory");
+                code[position] = Integer.toHexString(heap+1).toUpperCase();
+                position++;
+            }
+
+            System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+            code[position] = "8D";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [" + st3 + "] into memory");
+            code[position] = st3;
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [00] into memory");
+            code[position] = "00";
+            position++;
 
         }
 
-        else if (isDigit(n.children.get(0).name)){
+        else if (n.children.get(1).value.equals("boolean")){
+            System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+            code[position] = "A9";
+            position++;
 
+            if (n.children.get(1).name.equals("true"))
+                code[position] = "FB";
+            else
+                code[position] = "F5";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+            code[position] = "8D";
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [" + st3 + "] into memory");
+            code[position] = st3;
+            position++;
+
+            System.out.println("DEBUG CodeGen - Writing [00] into memory");
+            code[position] = "00";
+            position++;
         }
+
+        else if (isId(n.children.get(1).name)){
+            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+            code[position] = "AE";
+            position++;
+
+            st1 = checkStatic(staticData, n.children.get(1).name, currentScope, 1);
+            code[position] = st1;
+            position++;
+
+            st2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
+            code[position] = st2;
+            position++;
+        }
+        else if (n.children.get(1).name.equals("Addition")){
+            this.genAddition(n.children.get(1), currentScope);
+        }
+
+        else{
+            System.out.println("ERROR CodeGen - Unsupported Function");
+            error++;
+        }
+
     }
 
 }
