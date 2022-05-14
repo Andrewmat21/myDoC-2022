@@ -205,6 +205,16 @@ public class SemanticA {
                             System.out.println("DEBUG Semantic - ERROR: Undeclared variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
                     }
+                    else {
+                        if (n.children.get(0).type.equals("leaf")) {
+                            if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
+                                setType(n.children.get(0), "boolean");
+                            else if (isDigit(n.children.get(0).name))
+                                setType(n.children.get(0), "Digit");
+                            else
+                                setType(n.children.get(0), "string");
+                        }
+                    }
 
                     if (isId(n.children.get(1).name)){
                         existence = exists(symbolTable, n.children.get(1).name, currentScope);
@@ -233,6 +243,14 @@ public class SemanticA {
                     else if (n.children.get(1).name.equals("Equality") || n.children.get(1).name.equals("Inequality")){
                         break;
                     }
+                    if (n.children.get(1).type.equals("leaf")) {
+                    if (n.children.get(1).name.equals("true") || n.children.get(0).name.equals("false"))
+                        setType(n.children.get(1), "boolean");
+                    else if (isDigit(n.children.get(1).name))
+                        setType(n.children.get(1), "Digit");
+                    else
+                        setType(n.children.get(1), "string");
+                }
 
                     if (flag1){
                         temp = getType(symbolTable.get(existence) ,n.children.get(0).name);
@@ -273,6 +291,14 @@ public class SemanticA {
                             System.out.println("DEBUG Semantic - ERROR: Undeclared variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
                     }
+                    else if (n.children.get(0).type.equals("leaf")) {
+                        if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
+                            setType(n.children.get(0), "boolean");
+                        else if (isDigit(n.children.get(0).name))
+                            setType(n.children.get(0), "Digit");
+                        else
+                            setType(n.children.get(0), "string");
+                    }
 
                     if (isId(n.children.get(1).name)){
                         existence = exists(symbolTable, n.children.get(1).name, currentScope);
@@ -300,6 +326,14 @@ public class SemanticA {
                     }
                     else if (n.children.get(1).name.equals("Equality") || n.children.get(1).name.equals("Inequality")){
                         break;
+                    }
+                    if (n.children.get(1).type.equals("leaf")) {
+                        if (n.children.get(1).name.equals("true") || n.children.get(1).name.equals("false"))
+                            setType(n.children.get(1), "boolean");
+                        else if (isDigit(n.children.get(1).name))
+                            setType(n.children.get(1), "Digit");
+                        else
+                            setType(n.children.get(1), "string");
                     }
 
                     if (flag1){
@@ -339,9 +373,8 @@ public class SemanticA {
 
                             // mark that the ID has been used
                             use(symbolTable.get(currentScope),n.children.get(0).name, n.children.get(0).lineNum, n.children.get(0).position);
-                            /*if (use(symbolTable.get(currentScope), n.children.get(0).name)){
-                                System.out.println("at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
-                            }*/
+
+
                             // give warning if ID is used but hasn't been initialized
                             if (!isInitialized(symbolTable.get(currentScope),n.children.get(0).name)){
                                 warning++;
@@ -355,6 +388,16 @@ public class SemanticA {
                             System.out.println("DEBUG Semantic - ERROR: Undeclared variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
                     }
+
+                    if (n.children.get(0).type.equals("leaf")) {
+                        if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
+                            setType(n.children.get(0), "boolean");
+                        else if (isDigit(n.children.get(0).name))
+                            setType(n.children.get(0), "Digit");
+                        else
+                            setType(n.children.get(0), "string");
+                    }
+
                     break;
                 case "IfStatement":
                     if (isId(n.children.get(0).name)) {
@@ -378,6 +421,15 @@ public class SemanticA {
                             System.out.println("DEBUG Semantic - ERROR: Undeclared variable [ " + n.children.get(0).name + " ] found at (" + n.children.get(0).lineNum + ":" + n.children.get(0).position + ")");
                         }
                     }
+                    if (n.children.get(0).type.equals("leaf")) {
+                        if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
+                            setType(n.children.get(0), "boolean");
+                        else if (isDigit(n.children.get(0).name))
+                            setType(n.children.get(0), "Digit");
+                        else
+                            setType(n.children.get(0), "string");
+                    }
+
                     break;
                 case"PrintStatement":
                     if (isId(n.children.get(0).name)){
@@ -406,10 +458,15 @@ public class SemanticA {
                         }
                     }
 
-                    else if (getType(symbolTable.get(existence), n.children.get(0).name).equals("string"))
-                        setType(n.children.get(0), "string");
-                    else if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
-                        setType(n.children.get(0), "boolean");
+                    if (n.children.get(0).type.equals("leaf")) {
+                        if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
+                                setType(n.children.get(0), "boolean");
+                        else if (isDigit(n.children.get(0).name))
+                            setType(n.children.get(0), "Digit");
+                        else
+                            setType(n.children.get(0), "string");
+                    }
+
                     break;
             }
         }
