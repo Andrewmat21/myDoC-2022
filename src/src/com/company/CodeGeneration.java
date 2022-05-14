@@ -409,7 +409,8 @@ public class CodeGeneration {
                             System.out.println("DEBUG CodeGen - Writing [02] into memory");
                             code[position] = "02";
                             position++;
-                        } else {
+                        }
+                        else {
 
                             System.out.println("DEBUG CodeGen - Writing [01] into memory");
                             code[position] = "01";
@@ -439,6 +440,26 @@ public class CodeGeneration {
 
                     else if (n.children.get(0).name == "Addition") {
                         this.genAddition(n.children.get(0), currentScope);
+
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "AC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                        code[position] = "01";
+                        position++;
                     }
 
                     else if (n.children.get(0).value == "string") {
@@ -452,21 +473,32 @@ public class CodeGeneration {
                         int heapTemp;
 
                         //check if string is already in heap memory
+                        //reuse heap pointer if already exists
                         heapTemp = inHeap(heapMem, str);
                         if (heapTemp != -1) {
+                            System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heapTemp).toUpperCase() + "] into memory");
                             code[position] = Integer.toHexString(heapTemp).toUpperCase();
                             position++;
                         }
 
-                        //reuse heap pointer if already exists
+                        //store new string in heap
                         else {
                             for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
                                 code[heap] = toHex(str.charAt(i));
                                 heap--;
                             }
+                            System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heap+1).toUpperCase() + "] into memory");
                             code[position] = Integer.toHexString(heap+1).toUpperCase();
                             position++;
                         }
+
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
                     }
 
                     else if (n.children.get(0).value == "boolean"){
@@ -481,6 +513,13 @@ public class CodeGeneration {
                             code[position] = "F5";
                         position++;
 
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "02";
+                        position++;
                     }
 
                     System.out.println("DEBUG CodeGen - Writing [FF] into memory");
