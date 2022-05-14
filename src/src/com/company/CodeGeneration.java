@@ -1023,7 +1023,7 @@ public class CodeGeneration {
                     code[position] = "00";
                     position++;
 
-                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    System.out.println("DEBUG CodeGen - Writing [A2] into memory");
                     code[position] = "A2";
                     position++;
 
@@ -1031,19 +1031,19 @@ public class CodeGeneration {
                     code[position] = "00";
                     position++;
 
-                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    System.out.println("DEBUG CodeGen - Writing [8D] into memory");
                     code[position] = "8D";
                     position++;
 
-                    System.out.println("DEBUG CodeGen - Writing [EC] into memory");
-                    code[position] = "00";
-                    position++;
-
-                    System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
                     code[position] = "00";
                     position++;
 
                     System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [EC] into memory");
                     code[position] = "EC";
                     position++;
 
@@ -1055,6 +1055,82 @@ public class CodeGeneration {
                     code[position] = "00";
                     position++;
 
+                    String jumpEnd = "J" + jump;
+                    jump++;
+                    int whileStart = start;
+
+                    System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                    code[position] = "D0";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [" + jumpEnd + "] into memory");
+                    code[position] = jumpEnd;
+                    position++;
+
+                    this.generate(n.children.get(1), progNum);
+
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+                    code[position] = "8D";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                    code[position] = "A2";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                    code[position] = "01";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                    code[position] = "EC";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    String wJump = "J" + jump;
+                    jump++;
+
+                    System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                    code[position] = "D0";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [" + wJump + "] into memory");
+                    code[position] = wJump;
+                    position++;
+
+                    String val = Integer.toHexString((code.length - position) + start).toUpperCase();
+                    if (val.length() < 2)
+                        val = "0" + val;
+
+                    jumpTable.add(new Jump(wJump, val));
+
+                    val = Integer.toHexString(position - (whileStart + 2)).toUpperCase();
+                    if (val.length() < 2)
+                        val = "0" + val;
+
+                    jumpTable.add(new Jump(jumpEnd, val));
 
                     break;
                 case "IfStatement":
@@ -1098,7 +1174,17 @@ public class CodeGeneration {
             }
         }
 
+        for (int n = 0; n < jumpTable.size(); n++){
+            jumpTable.get(n).rep = Integer.toHexString(jumpTable.get(n).distance).toUpperCase();
+        }
 
+        for (int i = 0; i < jumpTable.size(); i++){
+            for (int j = 0; j < code.length; j++){
+                if (jumpTable.get(i).Temp.equals(code[j])){
+                    code[j] = jumpTable.get(i).rep;
+                }
+            }
+        }
     }
 
     public static String toHex(char s) {
@@ -1386,7 +1472,6 @@ public class CodeGeneration {
             System.out.println("DEBUG CodeGen - Writing [00] into memory");
             code[position] = "00";
             position++;
-
         }
 
         else if (n.children.get(1).value.equals("boolean")){
@@ -1413,7 +1498,7 @@ public class CodeGeneration {
             position++;
         }
 
-        else if (isId(n.children.get(1).name)){
+        else if (isId(n.children.get(1).name)) {
             System.out.println("DEBUG CodeGen - Writing [AE] into memory");
             code[position] = "AE";
             position++;
@@ -1426,7 +1511,7 @@ public class CodeGeneration {
             code[position] = st2;
             position++;
         }
-        else if (n.children.get(1).name.equals("Addition")){
+        else if (n.children.get(1).name.equals("Addition")) {
             this.genAddition(n.children.get(1), currentScope);
         }
 
@@ -1434,9 +1519,7 @@ public class CodeGeneration {
             System.out.println("ERROR CodeGen - Unsupported Function");
             error++;
         }
-
     }
-
 }
 
 class Static{
@@ -1460,8 +1543,19 @@ class Static{
 }
 
 class Jump{
-    public Jump(int temp){
 
+    String rep;
+    String Temp;
+    int distance;
+
+    public Jump(String temp, String rep) {
+        Temp = temp;
+        //int d = dist;
+        rep ="";
+    }
+
+    public void setLength(int i){
+        distance = i;
     }
 }
 
