@@ -13,6 +13,7 @@ public class CodeGeneration {
     int currentScope = -1;
     String Temp;
     int offSet = 0;
+    int jump;
     int heap = 243;
     int error = 0;
 
@@ -911,8 +912,23 @@ public class CodeGeneration {
                         code[position] = "00";
                         position++;
                     }
-
                     else if (n.children.get(0).name.equals("Equality")){
+                        this.genEq(n.children.get(0), currentScope);
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+                    }
+
+                    else if (n.children.get(0).name.equals("Inequality")){
                         System.out.println("DEBUG CodeGen - Writing [EC] into memory");
                         code[position] = "EC";
                         position++;
@@ -961,8 +977,6 @@ public class CodeGeneration {
                         code[position] = "8D";
                         position++;
 
-
-
                         System.out.println("DEBUG CodeGen - Writing [EC] into memory");
                         code[position] = "00";
                         position++;
@@ -983,8 +997,65 @@ public class CodeGeneration {
                         System.out.println("DEBUG CodeGen - Writing [FB] into memory");
                         code[position] = "00";
                         position++;
-
                     }
+
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [01] into memory");
+                    code[position] = "01";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                    code[position] = "D0";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                    code[position] = "02";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A9";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [A9] into memory");
+                    code[position] = "A2";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "8D";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "EC";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+                    System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                    code[position] = "00";
+                    position++;
+
+
                     break;
                 case "IfStatement":
                     break;
