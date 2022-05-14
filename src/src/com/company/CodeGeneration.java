@@ -459,12 +459,68 @@ public class CodeGeneration {
                         position++;
 
 
+                        System.out.println("DEBUG CodeGen - Writing [A2] into memory");
+                        code[position] = "A2";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [8D] into memory");
+                        code[position] = "8D";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+
+
+                        System.out.println("DEBUG CodeGen - Writing [EC] into memory");
+                        code[position] = "EC";
+                        position++;
+
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "00";
+                        position++;
+
+
+
                         System.out.println("DEBUG CodeGen - Writing [A9] into memory");
                         code[position] = "A9";
                         position++;
 
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
+                        code[position] = "F5";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "D0";
+                        position++;
+
                         System.out.println("DEBUG CodeGen - Writing [02] into memory");
                         code[position] = "02";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [D0] into memory");
+                        code[position] = "A9";
+                        position++;
+
+                        System.out.println("DEBUG CodeGen - Writing [02] into memory");
+                        code[position] = "FB";
                         position++;
 
                     }
