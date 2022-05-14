@@ -321,7 +321,7 @@ public class CodeGeneration {
                         position++;
                     }
                     // codeGen for string assign
-                    else if (n.children.get(1).value == "string") {
+                    else if (n.children.get(1).value.equals("string")) {
 
                         System.out.println("DEBUG CodeGen - Writing [A9] into memory");
                         code[position] = "A9";
@@ -338,12 +338,14 @@ public class CodeGeneration {
                             position++;
                         }
 
-                        //reuse heap pointer if already exists
+                        //store string in heap
                         else {
                             for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
                                 code[heap] = toHex(str.charAt(i));
                                 heap--;
                             }
+                            heapMem.add(new Heap(str, heap+1));
+                            heap--;
                         }
                     }
 
@@ -643,6 +645,9 @@ public class CodeGeneration {
                                 code[heap] = toHex(str.charAt(i));
                                 heap--;
                             }
+                            heapMem.add(new Heap(str, heap+1));
+                            heap--;
+
                             System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heap+1).toUpperCase() + "] into memory");
                             code[position] = Integer.toHexString(heap+1).toUpperCase();
                             position++;
@@ -919,7 +924,7 @@ public class CodeGeneration {
                         code[position] = "EC";
                         position++;
 
-                        System.out.println("DEBUG CodeGen - Writing [FB] into memory");
+                        System.out.println("DEBUG CodeGen - Writing [00] into memory");
                         code[position] = "00";
                         position++;
 
@@ -1292,7 +1297,6 @@ public class CodeGeneration {
                         ifJval = "0" + ifJval;
 
                     jumpTable.add(new Jump(jumpTEMPEnd, ifJval));
-                    
                     break;
             }
         }
@@ -1522,6 +1526,9 @@ public class CodeGeneration {
                     code[heap] = toHex(str.charAt(i));
                     heap--;
                 }
+                heapMem.add(new Heap(str, heap+1));
+                heap--;
+
                 System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heap+1).toUpperCase() + "] into memory");
                 code[position] = Integer.toHexString(heap+1).toUpperCase();
                 position++;
@@ -1617,6 +1624,9 @@ public class CodeGeneration {
                     code[heap] = toHex(str.charAt(i));
                     heap--;
                 }
+                heapMem.add(new Heap(str, heap+1));
+                heap--;
+
                 System.out.println("DEBUG CodeGen - Writing [" + Integer.toHexString(heap+1).toUpperCase() + "] into memory");
                 code[position] = Integer.toHexString(heap+1).toUpperCase();
                 position++;
