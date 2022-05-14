@@ -406,6 +406,8 @@ public class SemanticA {
                         }
                     }
 
+                    else if (getType(symbolTable.get(existence), n.children.get(0).name).equals("string"))
+                        setType(n.children.get(0), "string");
                     else if (n.children.get(0).name.equals("true") || n.children.get(0).name.equals("false"))
                         setType(n.children.get(0), "boolean");
                     break;

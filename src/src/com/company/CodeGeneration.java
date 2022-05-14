@@ -525,7 +525,6 @@ public class CodeGeneration {
 
                     }
 
-
                     code[position] = "8D";
                     position++;
 
@@ -538,9 +537,6 @@ public class CodeGeneration {
                     code[position] = temporaryStaticVar2;
                     position++;
 
-                    //inequ
-
-                    //eq
                     break;
 
                 case "PrintStatement":
@@ -628,7 +624,7 @@ public class CodeGeneration {
                         position++;
 
                         // check if string already exists in heap mem
-                        String str = n.children.get(1).name;
+                        String str = n.children.get(0).name;
                         int heapTemp;
 
                         //check if string is already in heap memory
@@ -642,7 +638,7 @@ public class CodeGeneration {
 
                         //store new string in heap
                         else {
-                            for (int i = n.children.get(1).name.length() - 1; i >= 0; i--) {
+                            for (int i = n.children.get(0).name.length() - 1; i >= 0; i--) {
                                 code[heap] = toHex(str.charAt(i));
                                 heap--;
                             }
