@@ -892,10 +892,21 @@ public class CodeGeneration {
     }
 
     public void backpatch() {
-        for (int i = 0; i < code.length; i++){
-            if (code[i].charAt(0) == 'T'){
-                String t = code[i];
-                String add = Integer.toHexString(position).toUpperCase();
+
+        position++;
+        for (int x = 0; x < staticData.size(); x++){
+            staticData.get(x).newPos = Integer.toHexString(position).toUpperCase();
+            position++;
+        }
+
+        for (int i = 0; i < staticData.size(); i++){
+            for (int j = 0; j < code.length; j++){
+                if (staticData.get(i).t.equals(code[j])){
+                    if (staticData.get(i).t.equals(code[j+1])) {
+                        code[i] = "00";
+                        code[i + 1] = "00";
+                    }
+                }
             }
         }
     }
