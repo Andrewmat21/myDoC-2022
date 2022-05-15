@@ -354,12 +354,12 @@ public class CodeGeneration {
                     }
 
                     // codeGen for boolean assign
-                    else if (n.children.get(1).value == "boolean") {
+                    else if (n.children.get(1).value.equals("boolean")) {
                         System.out.println("DEBUG CodeGen - Writing [A9] into memory");
                         code[position] = "A9";
                         position++;
 
-                        if (n.children.get(1).name == "true")
+                        if (n.children.get(1).name.equals("true"))
                             code[position] = "FB";
                         else
                             code[position] = "F5";
@@ -1308,6 +1308,12 @@ public class CodeGeneration {
 
     public void logCode() {
 
+        if (position >= 256 || heap-position <= 0) {
+            System.out.println("ERROR CodeGen - Memory is Full");
+            error++;
+
+        }
+
         int j = 0;
         System.out.println();
         for (int i = 0; i < code.length; i++) {
@@ -1679,7 +1685,7 @@ public class CodeGeneration {
         }
 
         else if (isId(n.children.get(1).name)) {
-            System.out.println("DEBUG CodeGen - Writing [AE] into memory");
+            /*System.out.println("DEBUG CodeGen - Writing [AE] into memory");
             code[position] = "AE";
             position++;
 
@@ -1689,15 +1695,14 @@ public class CodeGeneration {
 
             st2 = checkStatic(staticData, n.children.get(1).name, currentScope, 2);
             code[position] = st2;
-            position++;
+            position++;*/
         }
         else if (n.children.get(1).name.equals("Addition")) {
             this.genAddition(n.children.get(1), currentScope);
         }
 
         else{
-            System.out.println("ERROR CodeGen - Unsupported Function");
-            error++;
+            
         }
     }
 }

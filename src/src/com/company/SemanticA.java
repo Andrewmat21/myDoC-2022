@@ -110,11 +110,20 @@ public class SemanticA {
 
                             if (flag){
 
+                                if (n.children.get(1).type.equals("leaf")) {
+                                    if (n.children.get(1).name.equals("true") || n.children.get(1).name.equals("false"))
+                                        setType(n.children.get(1), "boolean");
+                                    else if (isDigit(n.children.get(1).name))
+                                        setType(n.children.get(1), "Digit");
+                                    else
+                                        setType(n.children.get(1), "string");
+                                }
+
                                 setType(n.children.get(0), temp);
                                 if (isDigit(n.children.get(1).name))
                                     setType(n.children.get(1), "Digit");
                                 else
-                                    setType(n.children.get(1), temp);
+                                    setType(n.children.get(1), temp2);
 
                                 System.out.println("VALID Semantic - Type check - ID [ " + n.children.get(0).name + " ] of type " + temp + " matches assignment type for [ " + n.children.get(1).name + " ] of type " + temp2);
                             }
