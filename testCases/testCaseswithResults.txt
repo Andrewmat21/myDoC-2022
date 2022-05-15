@@ -1,0 +1,61 @@
+/* prints 2 */
+{int a a = 1+1 print(a)}$
+
+/* prints abcdefg */
+{print("abcdefg")}$
+
+/*prints  2235*/
+{int a a = 1 {int a a =2 print(a)}
+{while(a != 5){a = 1 + a print(a)
+}
+print(3+a)}
+}$
+
+/* prints nice testha */
+{
+    print("nice test")
+    int v
+    v = 2
+    string k
+    k = "ha"
+print(k)
+}$
+
+
+
+/*This int has a value of  This int has a value of  This int has a value of  */
+{
+int a
+a = 1
+int b
+b = 1
+b = 1 + a
+while (2 + a != 3 + b) {
+a = 1 + a
+print("This int has a value of  ")
+print(a)
+print(" ")
+}
+print("int b is ")
+print(b)
+}$
+
+/*print 2*/
+{
+    int a
+    int b
+    b = 2
+    print(b)
+}$
+
+/*print look it works*/
+{
+ string s
+ s = "look it works"
+print(s)
+}$
+
+
+
+
+
